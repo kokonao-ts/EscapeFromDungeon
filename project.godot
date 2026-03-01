@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="EscapeFromDungeon"
-run/main_scene="res://src/combat/CombatRoom.tscn"
+run/main_scene="res://src/map/MapRoom.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+RunManager="*res://src/common/RunManager.gd"
 
 [physics]
 

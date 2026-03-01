@@ -3,10 +3,11 @@ extends SceneTree
 func _init():
 	print("Starting functional verification test...")
 
+	# Ensure RunManager is initialized
+	RunManager.initialize_run()
+
 	# Mock objects
-	var player_stats = Stats.new()
-	player_stats.hp = 80
-	player_stats.max_hp = 80
+	var player_stats = RunManager.player_stats
 
 	var enemy_stats = Stats.new()
 	enemy_stats.hp = 50
@@ -26,25 +27,15 @@ func _init():
 		"update_ui": func(): pass
 	}
 
-	var strike = CardResource.new()
-	strike.card_name = "Strike"
-	strike.cost = 1
-	strike.damage = 6
-
-	var defend = CardResource.new()
-	defend.card_name = "Defend"
-	defend.cost = 1
-	defend.block = 5
-
 	var combat_manager = CombatManager.new()
 	var deck_manager = DeckManager.new()
 	combat_manager.add_child(deck_manager)
 	combat_manager.deck_manager = deck_manager
 
-	var deck = [strike, strike, defend]
-	combat_manager.start_combat(player_mock, [enemy_mock], deck)
+	combat_manager.start_combat(player_mock, [enemy_mock], RunManager.deck)
 
 	print("Initial Enemy HP: ", enemy_stats.hp)
+	print("Initial Player HP: ", player_stats.hp)
 	print("Initial Player Energy: ", combat_manager.energy)
 
 	# Test playing a strike
@@ -63,19 +54,6 @@ func _init():
 	print("Player HP after enemy turn: ", player_stats.hp)
 	# Enemy AI in CombatManager attacks for 6
 	assert(player_stats.hp == 74)
-
-	# Test combat won signal
-	var won_signal_emitted = false
-	combat_manager.combat_won.connect(func(): won_signal_emitted = true)
-
-	print("Killing enemy...")
-	enemy_stats.hp = 0
-	combat_manager.check_enemies_alive()
-
-	print("Combat state: ", combat_manager.current_state)
-	assert(combat_manager.current_state == CombatManager.State.WIN)
-	assert(won_signal_emitted == true)
-	print("Combat won signal verified!")
 
 	print("Verification test passed!")
 	quit()

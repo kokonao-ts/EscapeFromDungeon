@@ -3,8 +3,7 @@ class_name CombatManager
 
 enum State { START_COMBAT, START_TURN, PLAYER_TURN, ENEMY_TURN, WIN, LOSE }
 
-signal combat_won
-signal combat_lost
+signal combat_finished(win: bool)
 
 var current_state: State = State.START_COMBAT
 var energy: int = 0
@@ -39,10 +38,10 @@ func transition_to(new_state: State):
 			execute_enemy_turns()
 		State.WIN:
 			print("Combat Won!")
-			combat_won.emit()
+			combat_finished.emit(true)
 		State.LOSE:
 			print("Combat Lost!")
-			combat_lost.emit()
+			combat_finished.emit(false)
 
 func play_card(card: CardResource, target = null):
 	if energy >= card.cost:
