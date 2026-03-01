@@ -22,7 +22,22 @@ func _ready():
 	combat_manager.start_combat(player, [enemy], RunManager.deck)
 
 	$CanvasLayer/EndTurnButton.pressed.connect(_on_end_turn_pressed)
+	$CanvasLayer/DebugUI/KillEnemyButton.pressed.connect(_on_kill_enemy_pressed)
+	$CanvasLayer/DebugUI/KillPlayerButton.pressed.connect(_on_kill_player_pressed)
 	update_ui()
+
+func _unhandled_input(event):
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_F12:
+			$CanvasLayer/DebugUI.visible = !$CanvasLayer/DebugUI.visible
+
+func _on_kill_enemy_pressed():
+	enemy.take_damage(999)
+	combat_manager.check_enemies_alive()
+
+func _on_kill_player_pressed():
+	player.take_damage(999)
+	combat_manager.transition_to(CombatManager.State.LOSE)
 
 func _on_hand_updated():
 	if not hand_ui:
