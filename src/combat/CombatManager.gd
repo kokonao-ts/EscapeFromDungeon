@@ -16,7 +16,7 @@ var enemies: Array = []
 func _ready():
 	pass
 
-func start_combat(p, ens, deck):
+func start_combat(p, ens: Array, deck: Array[CardResource]):
 	player = p
 	enemies = ens
 	deck_manager.setup_deck(deck)

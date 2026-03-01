@@ -12,7 +12,7 @@ func _ready():
 	# Setup sample data
 	var strike = load("res://src/cards/resources/Strike.tres")
 	var defend = load("res://src/cards/resources/Defend.tres")
-	var deck = [strike, strike, strike, defend, defend]
+	var deck: Array[CardResource] = [strike, strike, strike, defend, defend]
 
 	player.stats = Stats.new()
 	player.stats.max_hp = 80

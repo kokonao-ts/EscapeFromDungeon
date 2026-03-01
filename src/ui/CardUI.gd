@@ -16,6 +16,6 @@ func setup(card: CardResource):
 	description_label.text = card.description
 	icon_texture.texture = AssetHelper.get_texture(card.icon)
 
-func _on_gui_input(event):
+func _gui_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		card_played.emit(self)
