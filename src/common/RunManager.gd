@@ -7,11 +7,10 @@ var gold: int = 0
 var current_act: int = 1
 var current_node_index: int = -1 # -1 means just started act
 var current_map: MapAct = null
-
-func _ready():
-	initialize_run()
+var is_run_active: bool = false
 
 func initialize_run():
+	is_run_active = true
 	player_stats = Stats.new()
 	player_stats.max_hp = 80
 	player_stats.hp = 80
