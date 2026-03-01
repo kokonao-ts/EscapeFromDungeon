@@ -9,21 +9,17 @@ extends Node2D
 var card_ui_scene = preload("res://src/ui/CardUI.tscn")
 
 func _ready():
-	# Setup sample data
-	var strike = load("res://src/cards/resources/Strike.tres")
-	var defend = load("res://src/cards/resources/Defend.tres")
-	var deck: Array[CardResource] = [strike, strike, strike, defend, defend]
+	# Use data from RunManager
+	player.stats = RunManager.player_stats
 
-	player.stats = Stats.new()
-	player.stats.max_hp = 80
-	player.stats.hp = 80
-
+	# Setup simple enemy for now
 	enemy.stats = Stats.new()
 	enemy.stats.max_hp = 50
 	enemy.stats.hp = 50
 
 	combat_manager.deck_manager.hand_updated.connect(_on_hand_updated)
-	combat_manager.start_combat(player, [enemy], deck)
+	combat_manager.combat_finished.connect(_on_combat_finished)
+	combat_manager.start_combat(player, [enemy], RunManager.deck)
 
 	$CanvasLayer/EndTurnButton.pressed.connect(_on_end_turn_pressed)
 	update_ui()
@@ -45,6 +41,28 @@ func _on_card_played(card_ui):
 func _on_end_turn_pressed():
 	combat_manager.end_player_turn()
 	update_ui()
+
+func _on_combat_finished(win: bool):
+	if win:
+		print("You won!")
+		# Check if it was a boss battle
+		var act = RunManager.get_map()
+		if RunManager.current_node_index == act.nodes.size() - 1:
+			print("Boss defeated! Moving to next act...")
+			if RunManager.current_act < 3:
+				RunManager.next_act()
+				get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
+			else:
+				print("You've completed the game!")
+				RunManager.initialize_run()
+				get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
+		else:
+			print("Combat won! Returning to map...")
+			get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
+	else:
+		print("Game Over!")
+		RunManager.initialize_run()
+		get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
 
 func update_ui():
 	energy_label.text = "Energy: %d/%d" % [combat_manager.energy, combat_manager.max_energy]
