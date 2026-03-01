@@ -55,5 +55,31 @@ func _init():
 	# Enemy AI in CombatManager attacks for 6
 	assert(player_stats.hp == 74)
 
+	# Test Burn mechanic
+	print("Testing Burn mechanic...")
+	var ignite = load("res://src/cards/resources/Ignite.tres")
+	combat_manager.energy = 3
+	combat_manager.play_card(ignite, enemy_mock)
+	print("Enemy Burn after Ignite: ", enemy_stats.burn)
+	assert(enemy_stats.burn == 12)
+
+	# End player turn, then execute enemy turn which should trigger burn
+	print("Ending player turn (no burn on player)...")
+	combat_manager.transition_to(CombatManager.State.PLAYER_TURN)
+	combat_manager.end_player_turn()
+
+	print("Executing enemy turn (should trigger burn on enemy)...")
+	# execute_enemy_turns is called during transition to ENEMY_TURN in real combat,
+	# but here we might need to call it or let the transition handle it.
+	# CombatManager.transition_to(State.ENEMY_TURN) calls execute_enemy_turns()
+	# which we already did in end_player_turn()
+
+	print("Enemy HP after burn: ", enemy_stats.hp)
+	# Initial 44 - 12 = 32
+	assert(enemy_stats.hp == 32)
+	print("Enemy Burn after reduction: ", enemy_stats.burn)
+	# 12 - 10 = 2
+	assert(enemy_stats.burn == 2)
+
 	print("Verification test passed!")
 	quit()

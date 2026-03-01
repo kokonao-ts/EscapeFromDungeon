@@ -58,6 +58,13 @@ func play_card(card: CardResource, target = null):
 		if card.block > 0:
 			player.add_block(card.block)
 
+		if card.burn > 0:
+			if target:
+				target.stats.burn += card.burn
+			elif card.target == CardResource.Target.ALL_ENEMIES:
+				for e in enemies:
+					e.stats.burn += card.burn
+
 		if card.draw_cards > 0:
 			deck_manager.draw_cards(card.draw_cards)
 
@@ -70,6 +77,7 @@ func play_card(card: CardResource, target = null):
 
 func end_player_turn():
 	if current_state == State.PLAYER_TURN:
+		_process_burn(player)
 		deck_manager.discard_hand()
 		transition_to(State.ENEMY_TURN)
 
@@ -78,6 +86,7 @@ func execute_enemy_turns():
 		if enemy.is_alive():
 			# Simple AI: attack for 6
 			player.take_damage(6)
+			_process_burn(enemy)
 
 	if player.stats.hp <= 0:
 		transition_to(State.LOSE)
@@ -93,3 +102,8 @@ func check_enemies_alive():
 
 	if all_dead:
 		transition_to(State.WIN)
+
+func _process_burn(entity):
+	if entity.stats.burn > 0:
+		entity.take_damage(entity.stats.burn)
+		entity.stats.burn = max(0, entity.stats.burn - 10)

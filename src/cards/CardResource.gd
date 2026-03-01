@@ -14,6 +14,7 @@ enum Target { ENEMY, SELF, ALL_ENEMIES }
 
 @export var damage: int = 0
 @export var block: int = 0
+@export var burn: int = 0
 @export var draw_cards: int = 0
 @export var energy_gain: int = 0
 

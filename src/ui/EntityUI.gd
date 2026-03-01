@@ -10,5 +10,7 @@ func update_stats(stats: Stats):
 	hp_bar.max_value = stats.max_hp
 	hp_bar.value = stats.hp
 	hp_label.text = "HP: %d/%d" % [stats.hp, stats.max_hp]
+	if stats.burn > 0:
+		hp_label.text += " (Burn: %d)" % stats.burn
 	block_label.text = "Block: %d" % stats.block
 	block_label.visible = stats.block > 0
