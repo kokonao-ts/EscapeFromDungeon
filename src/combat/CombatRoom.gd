@@ -7,12 +7,15 @@ extends Node2D
 @onready var enemy = $Enemy
 
 var card_ui_scene = preload("res://src/ui/CardUI.tscn")
+var reward_ui_scene = preload("res://src/ui/BattleReward.tscn")
+
+var deck: Array[CardResource] = []
 
 func _ready():
 	# Setup sample data
 	var strike = load("res://src/cards/resources/Strike.tres")
 	var defend = load("res://src/cards/resources/Defend.tres")
-	var deck: Array[CardResource] = [strike, strike, strike, defend, defend]
+	deck = [strike, strike, strike, defend, defend]
 
 	player.stats = Stats.new()
 	player.stats.max_hp = 80
@@ -23,6 +26,7 @@ func _ready():
 	enemy.stats.hp = 50
 
 	combat_manager.deck_manager.hand_updated.connect(_on_hand_updated)
+	combat_manager.combat_won.connect(_on_combat_won)
 	combat_manager.start_combat(player, [enemy], deck)
 
 	$CanvasLayer/EndTurnButton.pressed.connect(_on_end_turn_pressed)
@@ -45,6 +49,24 @@ func _on_card_played(card_ui):
 func _on_end_turn_pressed():
 	combat_manager.end_player_turn()
 	update_ui()
+
+func _on_combat_won():
+	var reward_ui = reward_ui_scene.instantiate()
+	$CanvasLayer.add_child(reward_ui)
+
+	var possible_rewards: Array[CardResource] = [
+		load("res://src/cards/resources/Strike.tres"),
+		load("res://src/cards/resources/Defend.tres"),
+		load("res://src/cards/resources/Bash.tres"),
+		load("res://src/cards/resources/IronWave.tres")
+	]
+	reward_ui.setup(possible_rewards)
+	reward_ui.card_selected.connect(_on_reward_selected)
+
+func _on_reward_selected(card: CardResource):
+	deck.append(card)
+	print("Added card to deck: ", card.card_name)
+	print("Current deck size: ", deck.size())
 
 func update_ui():
 	energy_label.text = "Energy: %d/%d" % [combat_manager.energy, combat_manager.max_energy]
