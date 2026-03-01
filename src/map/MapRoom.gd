@@ -8,6 +8,7 @@ var current_act: MapAct
 func _ready():
 	current_act = RunManager.get_map()
 	display_act()
+	$MenuButton.pressed.connect(_on_menu_pressed)
 
 func display_act():
 	if not act_label or not node_container:
@@ -50,3 +51,7 @@ func _on_node_selected(index: int):
 	else:
 		# Just refresh if it's some other type not implemented yet
 		display_act()
+
+func _on_menu_pressed():
+	var pause_menu = load("res://src/ui/PauseMenu.tscn").instantiate()
+	add_child(pause_menu)
