@@ -16,6 +16,7 @@ enum Target { ENEMY, SELF, ALL_ENEMIES }
 @export var block: int = 0
 @export var draw_cards: int = 0
 @export var energy_gain: int = 0
+@export var chill: int = 0
 
 func apply_effects(user, targets):
 	# Basic implementation to be expanded in CombatManager or Entity logic

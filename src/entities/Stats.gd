@@ -4,6 +4,8 @@ class_name Stats
 @export var max_hp: int = 50
 @export var hp: int = 50
 @export var block: int = 0
+@export var chill: int = 0
+@export var frozen: int = 0
 
 func take_damage(amount: int):
 	if block >= amount:

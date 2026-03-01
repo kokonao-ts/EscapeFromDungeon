@@ -58,6 +58,13 @@ func play_card(card: CardResource, target = null):
 		if card.block > 0:
 			player.add_block(card.block)
 
+		if card.chill > 0:
+			if target:
+				apply_chill(target, card.chill)
+			elif card.target == CardResource.Target.ALL_ENEMIES:
+				for e in enemies:
+					apply_chill(e, card.chill)
+
 		if card.draw_cards > 0:
 			deck_manager.draw_cards(card.draw_cards)
 
@@ -73,9 +80,21 @@ func end_player_turn():
 		deck_manager.discard_hand()
 		transition_to(State.ENEMY_TURN)
 
+func apply_chill(target, amount: int):
+	target.stats.chill += amount
+	while target.stats.chill >= 10:
+		target.stats.chill -= 10
+		target.stats.frozen += 1
+	target.update_ui()
+
 func execute_enemy_turns():
 	for enemy in enemies:
 		if enemy.is_alive():
+			if enemy.stats.frozen > 0:
+				enemy.stats.frozen -= 1
+				enemy.update_ui()
+				print("Enemy is frozen and skips turn")
+				continue
 			# Simple AI: attack for 6
 			player.take_damage(6)
 

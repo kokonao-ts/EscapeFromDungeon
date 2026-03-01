@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/cards/CardResource.gd" id="1_x"]
+
+[resource]
+script = ExtResource("1_x")
+card_id = "freeze_touch"
+card_name = "Freeze Touch"
+cost = 0
+type = 1
+target = 0
+icon = "freeze_touch.png"
+description = "Apply 2 Chill. Draw 1 card."
+damage = 0
+block = 0
+draw_cards = 1
+energy_gain = 0
+chill = 2
