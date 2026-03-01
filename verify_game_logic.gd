@@ -55,5 +55,18 @@ func _init():
 	# Enemy AI in CombatManager attacks for 6
 	assert(player_stats.hp == 74)
 
+	# Test combat won signal
+	var won_signal_emitted = false
+	combat_manager.combat_won.connect(func(): won_signal_emitted = true)
+
+	print("Killing enemy...")
+	enemy_stats.hp = 0
+	combat_manager.check_enemies_alive()
+
+	print("Combat state: ", combat_manager.current_state)
+	assert(combat_manager.current_state == CombatManager.State.WIN)
+	assert(won_signal_emitted == true)
+	print("Combat won signal verified!")
+
 	print("Verification test passed!")
 	quit()
