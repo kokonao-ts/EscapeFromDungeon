@@ -22,6 +22,7 @@ func _ready():
 	combat_manager.start_combat(player, [enemy], RunManager.deck)
 
 	$CanvasLayer/EndTurnButton.pressed.connect(_on_end_turn_pressed)
+	$CanvasLayer/MenuButton.pressed.connect(_on_menu_pressed)
 	$CanvasLayer/DebugUI/KillEnemyButton.pressed.connect(_on_kill_enemy_pressed)
 	$CanvasLayer/DebugUI/KillPlayerButton.pressed.connect(_on_kill_player_pressed)
 	update_ui()
@@ -60,6 +61,10 @@ func _on_end_turn_pressed():
 	combat_manager.end_player_turn()
 	update_ui()
 
+func _on_menu_pressed():
+	var pause_menu = load("res://src/ui/PauseMenu.tscn").instantiate()
+	$CanvasLayer.add_child(pause_menu)
+
 func _on_combat_finished(win: bool):
 	if win:
 		print("You won!")
@@ -79,8 +84,7 @@ func _on_combat_finished(win: bool):
 			get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
 	else:
 		print("Game Over!")
-		RunManager.initialize_run()
-		get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
+		get_tree().change_scene_to_file("res://src/ui/EndingScreen.tscn")
 
 func update_ui():
 	if energy_label:

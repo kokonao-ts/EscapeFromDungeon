@@ -98,6 +98,13 @@ offset_right = 1100.0
 offset_bottom = 550.0
 text = "End Turn"
 
+[node name="MenuButton" type="Button" parent="CanvasLayer"]
+offset_left = 1050.0
+offset_top = 20.0
+offset_right = 1130.0
+offset_bottom = 60.0
+text = "選單"
+
 [node name="UI" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 0
