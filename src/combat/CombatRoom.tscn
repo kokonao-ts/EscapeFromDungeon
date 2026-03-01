@@ -1,0 +1,96 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/combat/CombatManager.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/combat/DeckManager.gd" id="2_b"]
+[ext_resource type="Script" path="res://src/entities/Entity.gd" id="3_c"]
+[ext_resource type="Script" path="res://src/ui/EntityUI.gd" id="4_d"]
+[ext_resource type="Script" path="res://src/combat/CombatRoom.gd" id="5_e"]
+
+[node name="CombatRoom" type="Node2D"]
+script = ExtResource("5_e")
+
+[node name="CombatManager" type="Node" parent="."]
+script = ExtResource("1_a")
+
+[node name="DeckManager" type="Node" parent="CombatManager"]
+script = ExtResource("2_b")
+
+[node name="Player" type="Node2D" parent="."]
+position = Vector2(200, 400)
+script = ExtResource("3_c")
+
+[node name="EntityUI" type="Control" parent="Player"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("4_d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Player/EntityUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HPBar" type="ProgressBar" parent="Player/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="Player/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="BlockLabel" type="Label" parent="Player/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="Enemy" type="Node2D" parent="."]
+position = Vector2(800, 400)
+script = ExtResource("3_c")
+
+[node name="EntityUI" type="Control" parent="Enemy"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("4_d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Enemy/EntityUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HPBar" type="ProgressBar" parent="Enemy/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="Enemy/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="BlockLabel" type="Label" parent="Enemy/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HandUI" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="EndTurnButton" type="Button" parent="CanvasLayer"]
+offset_left = 1000.0
+offset_top = 500.0
+offset_right = 1100.0
+offset_bottom = 550.0
+text = "End Turn"
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="EnergyLabel" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 550.0
+offset_right = 150.0
+offset_bottom = 580.0
+text = "Energy: 3/3"
