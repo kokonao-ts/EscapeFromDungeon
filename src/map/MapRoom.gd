@@ -10,6 +10,9 @@ func _ready():
 	display_act()
 
 func display_act():
+	if not act_label or not node_container:
+		return
+
 	act_label.text = "Act %d" % current_act.act_number
 	for child in node_container.get_children():
 		child.queue_free()
@@ -43,7 +46,6 @@ func _on_node_selected(index: int):
 		get_tree().change_scene_to_file("res://src/combat/CombatRoom.tscn")
 	elif node.type == MapNode.Type.BOSS:
 		# After winning a boss battle, move to next act
-		# For now, let's just trigger a combat and handle the transition in CombatRoom
 		get_tree().change_scene_to_file("res://src/combat/CombatRoom.tscn")
 	else:
 		# Just refresh if it's some other type not implemented yet
