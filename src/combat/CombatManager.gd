@@ -44,8 +44,18 @@ func transition_to(new_state: State):
 			combat_finished.emit(false)
 
 func play_card(card: CardResource, target = null):
-	if energy >= card.cost:
-		energy -= card.cost
+	var effective_cost = card.cost
+	if card.free_if_chilled:
+		if target and target.stats.chill > 0:
+			effective_cost = 0
+		elif card.target == CardResource.Target.ALL_ENEMIES:
+			for e in enemies:
+				if e.is_alive() and e.stats.chill > 0:
+					effective_cost = 0
+					break
+
+	if energy >= effective_cost:
+		energy -= effective_cost
 
 		# Apply effects
 		if card.damage > 0:
