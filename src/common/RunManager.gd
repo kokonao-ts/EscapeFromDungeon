@@ -39,30 +39,30 @@ func initialize_run(p_class: CharacterClass = CharacterClass.IRONCLAD):
 			var strike = load("res://src/cards/resources/Strike.tres")
 			var defend = load("res://src/cards/resources/Defend.tres")
 			var bash = load("res://src/cards/resources/Bash.tres")
-			deck = [strike, strike, strike, strike, strike, defend, defend, defend, defend, bash]
+			deck.assign([strike, strike, strike, strike, strike, defend, defend, defend, defend, bash])
 		CharacterClass.SILENT:
 			player_stats.max_hp = 70
 			var strike = load("res://src/cards/resources/SilentStrike.tres")
 			var defend = load("res://src/cards/resources/SilentDefend.tres")
 			var special = load("res://src/cards/resources/SilentSpecial.tres")
-			deck = [strike, strike, strike, strike, strike, defend, defend, defend, defend, defend, special]
+			deck.assign([strike, strike, strike, strike, strike, defend, defend, defend, defend, defend, special])
 		CharacterClass.WATCHER:
 			player_stats.max_hp = 72
 			var strike = load("res://src/cards/resources/WatcherStrike.tres")
 			var defend = load("res://src/cards/resources/WatcherDefend.tres")
 			var special = load("res://src/cards/resources/WatcherSpecial.tres")
-			deck = [strike, strike, strike, strike, defend, defend, defend, defend, special]
+			deck.assign([strike, strike, strike, strike, defend, defend, defend, defend, special])
 		CharacterClass.GOBLIN_ASSASSIN:
 			player_stats.max_hp = 50
 			var execute_knife = load("res://src/cards/resources/ExecuteKnife.tres")
-			fixed_cards = [execute_knife]
-			deck = [execute_knife]
+			fixed_cards.assign([execute_knife])
+			deck.assign([execute_knife])
 
 			var core_body = Body.new()
 			core_body.name = "哥布林刺客"
 			core_body.max_hp = 50
 			core_body.hp = 50
-			core_body.deck = [execute_knife]
+			core_body.deck.assign([execute_knife])
 			bodies.append(core_body)
 
 	player_stats.hp = player_stats.max_hp
