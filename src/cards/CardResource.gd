@@ -23,10 +23,13 @@ enum Target { ENEMY, SELF, ALL_ENEMIES }
 @export var vulnerable: int = 0
 @export var weak: int = 0
 @export var strength: int = 0
+@export var burn: int = 0
+@export var chill: int = 0
 
 @export_group("Special")
 @export var exhaust: bool = false
 @export var self_damage: int = 0
+@export var free_if_chilled: bool = false
 
 func apply_effects(user, targets):
 	# Basic implementation to be expanded in CombatManager or Entity logic

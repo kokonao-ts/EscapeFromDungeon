@@ -8,6 +8,9 @@ class_name Stats
 @export var strength: int = 0
 @export var weak: int = 0
 @export var vulnerable: int = 0
+@export var burn: int = 0
+@export var chill: int = 0
+@export var frozen: int = 0
 
 func take_damage(amount: int):
 	var modified_damage = amount
@@ -35,3 +38,4 @@ func end_turn():
 		weak -= 1
 	if vulnerable > 0:
 		vulnerable -= 1
+	# Burn and Chill/Frozen are typically handled by CombatManager as per memory

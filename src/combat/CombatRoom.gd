@@ -12,10 +12,19 @@ func _ready():
 	# Use data from RunManager
 	player.stats = RunManager.player_stats
 
-	# Setup simple enemy for now
-	enemy.stats = Stats.new()
-	enemy.stats.max_hp = 50
-	enemy.stats.hp = 50
+	# Setup enemy based on RunManager data
+	var map = RunManager.get_map()
+	var current_node = map.nodes[RunManager.current_node_index]
+	var enemy_res = current_node.data.get("enemy_resource")
+
+	if enemy_res and enemy_res is EnemyResource:
+		enemy.set_script(load("res://src/entities/Enemy.gd"))
+		enemy.setup(enemy_res)
+	else:
+		# Fallback to simple enemy
+		enemy.stats = Stats.new()
+		enemy.stats.max_hp = 50
+		enemy.stats.hp = 50
 
 	combat_manager.deck_manager.hand_updated.connect(_on_hand_updated)
 	combat_manager.combat_finished.connect(_on_combat_finished)

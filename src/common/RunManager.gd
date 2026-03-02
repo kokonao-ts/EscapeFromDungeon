@@ -38,14 +38,23 @@ func get_map() -> MapAct:
 func generate_act(act_num: int):
 	current_map = MapAct.new(act_num)
 
+	var possible_enemies = [
+		load("res://src/entities/resources/JawWorm.tres"),
+		load("res://src/entities/resources/Cultist.tres"),
+		load("res://src/entities/resources/SmallSlime.tres")
+	]
+
 	# Basic linear act for now: 5 combats and a boss
 	for i in range(5):
 		var node = MapNode.new()
 		node.type = MapNode.Type.COMBAT
 		node.position = Vector2(0, i * 100)
+		# Assign a random enemy
+		node.data["enemy_resource"] = possible_enemies[randi() % possible_enemies.size()]
 		current_map.nodes.append(node)
 
 	var boss = MapNode.new()
 	boss.type = MapNode.Type.BOSS
 	boss.position = Vector2(0, 500)
+	boss.data["enemy_resource"] = possible_enemies[0] # Use Jaw Worm as boss for now
 	current_map.nodes.append(boss)

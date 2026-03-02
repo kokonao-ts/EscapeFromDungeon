@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_chomp"]
+script = ExtResource("1_a")
+type = 0
+damage = 11
+block = 0
+strength = 0
+vulnerable = 0
+weak = 0
+description = "Chomp"
+icon = ""
+
+[sub_resource type="Resource" id="Resource_bellow"]
+script = ExtResource("1_a")
+type = 1
+damage = 0
+block = 6
+strength = 3
+vulnerable = 0
+weak = 0
+description = "Bellow"
+icon = ""
+
+[sub_resource type="Resource" id="Resource_thrash"]
+script = ExtResource("1_a")
+type = 0
+damage = 7
+block = 5
+strength = 0
+vulnerable = 0
+weak = 0
+description = "Thrash"
+icon = ""
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "jaw_worm"
+enemy_name = "Jaw Worm"
+max_hp = 44
+actions = Array[ExtResource("1_a")]([SubResource("Resource_chomp"), SubResource("Resource_bellow"), SubResource("Resource_thrash")])
+action_weights = []
