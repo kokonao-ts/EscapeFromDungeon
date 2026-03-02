@@ -77,6 +77,9 @@ func execute_turn(combat_manager, player):
 				# Apply thorns damage back to enemy if player has thorns
 				if player.stats.thorns > 0:
 					self.take_damage(player.stats.thorns)
+				# Apply electrified damage back to enemy if player has electrified
+				if player.stats.electrified > 0:
+					self.take_damage(player.stats.electrified)
 
 		# Apply block
 		if action.block > 0:
@@ -121,6 +124,8 @@ func execute_turn(combat_manager, player):
 		# Summon/Split
 		if action.type == EnemyAction.Type.SUMMON and action.summon_enemy:
 			combat_manager.spawn_enemy(action.summon_enemy)
+		elif action.type == EnemyAction.Type.SPLIT:
+			trigger_split()
 
 		player.update_ui()
 		if not is_alive():
@@ -139,6 +144,9 @@ func take_damage(amount: int):
 			trigger_split()
 
 func trigger_split():
+	if not enemy_resource or enemy_resource.split_result.is_empty():
+		return
+
 	print("%s is splitting!" % enemy_resource.enemy_name)
 	var combat_manager = get_tree().root.find_child("CombatManager", true, false)
 	if combat_manager:

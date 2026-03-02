@@ -106,12 +106,17 @@ func play_card(card: CardResource, target = null):
 					# Thorns damage back to player
 					if target.stats.thorns > 0:
 						player.stats.lose_hp(target.stats.thorns)
+					# Electrified damage back to player
+					if target.stats.electrified > 0:
+						player.stats.lose_hp(target.stats.electrified)
 				elif card.target == CardResource.Target.ALL_ENEMIES:
 					for e in enemies:
 						if e.is_alive():
 							e.take_damage(base_damage)
 							if e.stats.thorns > 0:
 								player.stats.lose_hp(e.stats.thorns)
+							if e.stats.electrified > 0:
+								player.stats.lose_hp(e.stats.electrified)
 
 		if card.block > 0:
 			player.add_block(card.block)

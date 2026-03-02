@@ -32,23 +32,48 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CardListPanel" type="PanelContainer" parent="HBoxContainer"]
+[node name="Sidebar" type="VBoxContainer" parent="HBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/CardListPanel"]
+[node name="CardListPanel" type="PanelContainer" parent="HBoxContainer/Sidebar"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Sidebar/CardListPanel"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="HBoxContainer/CardListPanel/VBoxContainer"]
+[node name="Title" type="Label" parent="HBoxContainer/Sidebar/CardListPanel/VBoxContainer"]
 layout_mode = 2
 text = "Card Library"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/CardListPanel/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Sidebar/CardListPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CardList" type="VBoxContainer" parent="HBoxContainer/CardListPanel/VBoxContainer/ScrollContainer"]
+[node name="CardList" type="VBoxContainer" parent="HBoxContainer/Sidebar/CardListPanel/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnemyListPanel" type="PanelContainer" parent="HBoxContainer/Sidebar"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Sidebar/EnemyListPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="HBoxContainer/Sidebar/EnemyListPanel/VBoxContainer"]
+layout_mode = 2
+text = "Enemy Library"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Sidebar/EnemyListPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EnemyList" type="VBoxContainer" parent="HBoxContainer/Sidebar/EnemyListPanel/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -138,6 +163,11 @@ text = "Add Energy"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Clear Status"
+
+[node name="EnemyTurnButton" type="Button" parent="HBoxContainer/CombatArea/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enemy Turn"
 
 [node name="BackButton" type="Button" parent="HBoxContainer/CombatArea/Controls"]
 unique_name_in_owner = true
