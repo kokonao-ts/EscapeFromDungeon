@@ -17,5 +17,8 @@ func _on_settings_pressed():
 	# Placeholder for settings
 	print("Settings pressed")
 
+func _on_playground_pressed():
+	get_tree().change_scene_to_file("res://src/playground/Playground.tscn")
+
 func _on_quit_pressed():
 	get_tree().quit()
