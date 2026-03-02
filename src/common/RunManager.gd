@@ -55,26 +55,52 @@ func initialize_run(p_class: CharacterClass = CharacterClass.IRONCLAD):
 		CharacterClass.GOBLIN_ASSASSIN:
 			player_stats.max_hp = 50
 			var execute_knife = load("res://src/cards/resources/ExecuteKnife.tres")
+			var goblin_strike = load("res://src/cards/resources/GoblinStrike.tres")
+			var goblin_rally = load("res://src/cards/resources/GoblinRally.tres")
+			var strike = load("res://src/cards/resources/Strike.tres")
+			var defend = load("res://src/cards/resources/Defend.tres")
+
 			fixed_cards.assign([execute_knife])
-			deck.assign([execute_knife])
+			# One Execute Knife from fixed_cards, 14 from start_deck = 15 total
+			var start_deck: Array[CardResource] = [
+				goblin_strike, goblin_strike, goblin_strike, goblin_strike,
+				goblin_rally, goblin_rally, goblin_rally, goblin_rally,
+				strike, strike, strike,
+				defend, defend, defend
+			]
+			deck.assign(start_deck)
 
 			var core_body = Body.new()
 			core_body.name = "哥布林刺客"
 			core_body.max_hp = 50
 			core_body.hp = 50
-			core_body.deck.assign([execute_knife])
+			core_body.deck.assign(start_deck)
 			bodies.append(core_body)
 		CharacterClass.GOBLIN_MAGE:
 			player_stats.max_hp = 40
 			var body_swap = load("res://src/cards/resources/BodySwap.tres")
+			var fireball = load("res://src/cards/resources/Fireball.tres")
+			var frostbolt = load("res://src/cards/resources/Frostbolt.tres")
+			var mana_barrier = load("res://src/cards/resources/ManaBarrier.tres")
+			var goblin_strike = load("res://src/cards/resources/GoblinStrike.tres")
+			var goblin_rally = load("res://src/cards/resources/GoblinRally.tres")
+
 			fixed_cards.assign([body_swap])
-			deck.assign([body_swap])
+			# One Body Swap from fixed_cards, 14 from start_deck = 15 total
+			var start_deck: Array[CardResource] = [
+				fireball, fireball, fireball,
+				frostbolt, frostbolt, frostbolt,
+				mana_barrier, mana_barrier, mana_barrier,
+				goblin_strike, goblin_strike,
+				goblin_rally, goblin_rally, goblin_rally
+			]
+			deck.assign(start_deck)
 
 			var core_body = Body.new()
 			core_body.name = "哥布林法師"
 			core_body.max_hp = 40
 			core_body.hp = 40
-			core_body.deck.assign([body_swap])
+			core_body.deck.assign(start_deck)
 			bodies.append(core_body)
 
 	player_stats.hp = player_stats.max_hp
@@ -177,7 +203,7 @@ func switch_body(index: int):
 		return
 
 	# Save current HP if we are in a run and current index is still valid
-	if is_run_active and current_body_index < bodies.size():
+	if is_run_active and current_body_index >= 0 and current_body_index < bodies.size():
 		bodies[current_body_index].hp = player_stats.hp
 
 	current_body_index = index
