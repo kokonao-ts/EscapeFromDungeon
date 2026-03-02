@@ -8,6 +8,7 @@ card_id = "sever_soul"
 card_name = "Sever Soul"
 cost = 2
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Exhaust all non-Attack cards in your hand. Deal 16 damage."

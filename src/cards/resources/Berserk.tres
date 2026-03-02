@@ -8,6 +8,7 @@ card_id = "berserk"
 card_name = "Berserk"
 cost = 0
 type = 2
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Gain 2 Vulnerable. At the start of your turn, gain 1 Energy."

@@ -8,6 +8,7 @@ card_id = "impervious"
 card_name = "Impervious"
 cost = 2
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Gain 30 Block. Exhaust."

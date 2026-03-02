@@ -8,6 +8,7 @@ card_id = "strike"
 card_name = "Strike"
 cost = 1
 type = 0
+character_class = 0
 target = 0
 icon = "strike.png"
 description = "Deal 6 damage."

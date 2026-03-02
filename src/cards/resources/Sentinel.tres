@@ -8,6 +8,7 @@ card_id = "sentinel"
 card_name = "Sentinel"
 cost = 1
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Gain 5 Block. If this card is Exhausted, gain 2 energy."

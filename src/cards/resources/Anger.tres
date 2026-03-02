@@ -8,6 +8,7 @@ card_id = "anger"
 card_name = "Anger"
 cost = 0
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 6 damage. Add a copy of this card to your discard pile."

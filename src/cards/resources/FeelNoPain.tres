@@ -8,6 +8,7 @@ card_id = "feel_no_pain"
 card_name = "Feel No Pain"
 cost = 1
 type = 2
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Whenever a card is Exhausted, gain 3 Block."

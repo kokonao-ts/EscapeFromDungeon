@@ -8,6 +8,7 @@ card_id = "headbutt"
 card_name = "Headbutt"
 cost = 1
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 9 damage. Put a card from your discard pile on top of your draw pile."

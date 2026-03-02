@@ -8,6 +8,7 @@ card_id = "havoc"
 card_name = "Havoc"
 cost = 1
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Play the top card of your draw pile and Exhaust it."

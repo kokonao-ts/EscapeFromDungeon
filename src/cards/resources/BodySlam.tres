@@ -8,6 +8,7 @@ card_id = "body_slam"
 card_name = "Body Slam"
 cost = 1
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Deal damage equal to your current Block."

@@ -8,6 +8,7 @@ card_id = "bloodletting"
 card_name = "Bloodletting"
 cost = 0
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Lose 3 HP. Gain 2 Energy."

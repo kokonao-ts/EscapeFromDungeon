@@ -8,6 +8,7 @@ card_id = "clash"
 card_name = "Clash"
 cost = 0
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Can only be played if every card in your hand is an Attack. Deal 14 damage."

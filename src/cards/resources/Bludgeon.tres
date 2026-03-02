@@ -8,6 +8,7 @@ card_id = "bludgeon"
 card_name = "Bludgeon"
 cost = 3
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 32 damage."

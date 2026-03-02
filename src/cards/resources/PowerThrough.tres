@@ -8,6 +8,7 @@ card_id = "power_through"
 card_name = "Power Through"
 cost = 1
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Add 2 Wounds to your hand. Gain 15 Block."

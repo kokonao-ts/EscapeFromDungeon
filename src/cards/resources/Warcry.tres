@@ -8,6 +8,7 @@ card_id = "warcry"
 card_name = "Warcry"
 cost = 0
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Draw 1 card. Put a card from your hand onto the top of your draw pile. Exhaust."

@@ -8,6 +8,7 @@ card_id = "corruption"
 card_name = "Corruption"
 cost = 3
 type = 2
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Skills cost 0. Whenever you play a Skill, Exhaust it."
