@@ -3,9 +3,11 @@ class_name CardResource
 
 enum Type { ATTACK, SKILL, POWER }
 enum Target { ENEMY, SELF, ALL_ENEMIES }
+enum CharacterClass { IRONCLAD, SILENT, WATCHER, NEUTRAL }
 
 @export var card_id: String = ""
 @export var card_name: String = "Card"
+@export var character_class: CharacterClass = CharacterClass.IRONCLAD
 @export var cost: int = 1
 @export var type: Type = Type.ATTACK
 @export var target: Target = Target.ENEMY

@@ -8,6 +8,7 @@ card_id = "ghostly_armor"
 card_name = "Ghostly Armor"
 cost = 1
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Ethereal. Gain 10 Block."

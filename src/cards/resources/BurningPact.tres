@@ -8,6 +8,7 @@ card_id = "burning_pact"
 card_name = "Burning Pact"
 cost = 1
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Exhaust 1 card. Draw 2 cards."

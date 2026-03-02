@@ -8,6 +8,7 @@ card_id = "feed"
 card_name = "Feed"
 cost = 1
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 10 damage. If this kills a non-minion enemy, raise your Max HP by 3. Exhaust."

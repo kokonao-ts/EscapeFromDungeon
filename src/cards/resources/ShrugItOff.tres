@@ -8,6 +8,7 @@ card_id = "shrug_it_off"
 card_name = "Shrug It Off"
 cost = 1
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Gain 8 Block. Draw 1 card."

@@ -8,6 +8,7 @@ card_id = "evolve"
 card_name = "Evolve"
 cost = 1
 type = 2
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Whenever you draw a Status card, draw 1 card."

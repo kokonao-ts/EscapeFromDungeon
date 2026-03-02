@@ -7,6 +7,7 @@ extends Node2D
 @onready var enemy = $Enemy
 
 var card_ui_scene = preload("res://src/ui/CardUI.tscn")
+var battle_reward_scene = preload("res://src/ui/BattleReward.tscn")
 
 func _ready():
 	# Use data from RunManager
@@ -68,23 +69,37 @@ func _on_menu_pressed():
 func _on_combat_finished(win: bool):
 	if win:
 		print("You won!")
-		# Check if it was a boss battle
-		var act = RunManager.get_map()
-		if RunManager.current_node_index == act.nodes.size() - 1:
-			print("Boss defeated! Moving to next act...")
-			if RunManager.current_act < 3:
-				RunManager.next_act()
-				get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
-			else:
-				print("You've completed the game!")
-				RunManager.initialize_run()
-				get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
-		else:
-			print("Combat won! Returning to map...")
-			get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
+		show_rewards()
 	else:
 		print("Game Over!")
 		get_tree().change_scene_to_file("res://src/ui/EndingScreen.tscn")
+
+func show_rewards():
+	var reward_ui = battle_reward_scene.instantiate()
+	$CanvasLayer.add_child(reward_ui)
+	reward_ui.card_selected.connect(_on_reward_card_selected)
+	# Connect to tree_exited to handle returning to map after reward is closed
+	reward_ui.tree_exited.connect(_on_reward_finished)
+
+func _on_reward_card_selected(card: CardResource):
+	RunManager.deck.append(card)
+	print("Added %s to deck" % card.card_name)
+
+func _on_reward_finished():
+	# Check if it was a boss battle
+	var act = RunManager.get_map()
+	if RunManager.current_node_index == act.nodes.size() - 1:
+		print("Boss defeated! Moving to next act...")
+		if RunManager.current_act < 3:
+			RunManager.next_act()
+			get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
+		else:
+			print("You've completed the game!")
+			RunManager.initialize_run(RunManager.character_class)
+			get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
+	else:
+		print("Returning to map...")
+		get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
 
 func update_ui():
 	if energy_label:

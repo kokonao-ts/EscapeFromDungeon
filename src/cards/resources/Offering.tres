@@ -8,6 +8,7 @@ card_id = "offering"
 card_name = "Offering"
 cost = 0
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Lose 6 HP. Gain 2 energy. Draw 3 cards. Exhaust."

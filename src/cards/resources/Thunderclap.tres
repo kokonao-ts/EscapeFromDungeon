@@ -8,6 +8,7 @@ card_id = "thunderclap"
 card_name = "Thunderclap"
 cost = 1
 type = 0
+character_class = 0
 target = 2
 icon = "card_placeholder.png"
 description = "Deal 4 damage and apply 1 Vulnerable to ALL enemies."

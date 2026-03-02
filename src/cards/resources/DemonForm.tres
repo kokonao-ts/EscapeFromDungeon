@@ -8,6 +8,7 @@ card_id = "demon_form"
 card_name = "Demon Form"
 cost = 3
 type = 2
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "At the start of your turn, gain 2 Strength."

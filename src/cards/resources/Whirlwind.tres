@@ -8,6 +8,7 @@ card_id = "whirlwind"
 card_name = "Whirlwind"
 cost = -1
 type = 0
+character_class = 0
 target = 2
 icon = "card_placeholder.png"
 description = "Deal 5 damage to ALL enemies X times."

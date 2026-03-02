@@ -8,6 +8,7 @@ card_id = "battle_trance"
 card_name = "Battle Trance"
 cost = 0
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Draw 3 cards. You cannot draw additional cards this turn."

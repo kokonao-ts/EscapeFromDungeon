@@ -8,6 +8,7 @@ card_id = "spot_weakness"
 card_name = "Spot Weakness"
 cost = 1
 type = 1
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "If the enemy intends to attack, gain 3 Strength."

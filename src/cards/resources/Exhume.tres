@@ -8,6 +8,7 @@ card_id = "exhume"
 card_name = "Exhume"
 cost = 1
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Put a card from your Exhaust pile into your hand. Exhaust."

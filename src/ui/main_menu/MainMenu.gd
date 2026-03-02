@@ -7,8 +7,7 @@ func _ready():
 	continue_button.disabled = not RunManager.is_run_active
 
 func _on_new_game_pressed():
-	RunManager.initialize_run()
-	get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")
+	get_tree().change_scene_to_file("res://src/ui/CharacterSelection.tscn")
 
 func _on_continue_pressed():
 	get_tree().change_scene_to_file("res://src/map/MapRoom.tscn")

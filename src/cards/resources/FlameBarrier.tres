@@ -8,6 +8,7 @@ card_id = "flame_barrier"
 card_name = "Flame Barrier"
 cost = 2
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Gain 12 Block. Whenever you are attacked this turn, deal 4 damage back."

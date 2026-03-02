@@ -4,16 +4,16 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "true_grit"
-card_name = "True Grit"
+card_id = "watcher_defend"
+card_name = "Watcher Defend"
 cost = 1
 type = 1
-character_class = 0
+character_class = 2
 target = 1
-icon = "card_placeholder.png"
-description = "Gain 7 Block. Exhaust a random card from your hand."
+icon = "defend.png"
+description = "Gain 5 Block."
 damage = 0
-block = 7
+block = 5
 draw_cards = 0
 energy_gain = 0
 hits = 1

@@ -8,6 +8,7 @@ card_id = "barricade"
 card_name = "Barricade"
 cost = 3
 type = 2
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Block no longer expires at the start of your turn."

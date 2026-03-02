@@ -8,6 +8,7 @@ card_id = "hemokinesis"
 card_name = "Hemokinesis"
 cost = 1
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Lose 2 HP. Deal 15 damage."

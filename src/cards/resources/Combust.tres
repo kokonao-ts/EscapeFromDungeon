@@ -8,6 +8,7 @@ card_id = "combust"
 card_name = "Combust"
 cost = 1
 type = 2
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "At the end of your turn, lose 1 HP and deal 5 damage to ALL enemies."

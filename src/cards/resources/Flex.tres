@@ -8,6 +8,7 @@ card_id = "flex"
 card_name = "Flex"
 cost = 0
 type = 1
+character_class = 0
 target = 1
 icon = "card_placeholder.png"
 description = "Gain 2 Strength. At the end of your turn, lose 2 Strength."

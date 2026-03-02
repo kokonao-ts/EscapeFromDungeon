@@ -8,6 +8,7 @@ card_id = "blood_for_blood"
 card_name = "Blood for Blood"
 cost = 4
 type = 0
+character_class = 0
 target = 0
 icon = "card_placeholder.png"
 description = "Costs 1 less energy for each time you lose HP in this combat. Deal 18 damage."
