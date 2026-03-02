@@ -1,0 +1,170 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/playground/Playground.gd" id="1_pg"]
+[ext_resource type="Script" path="res://src/combat/CombatManager.gd" id="2_cm"]
+[ext_resource type="Script" path="res://src/combat/DeckManager.gd" id="3_dm"]
+[ext_resource type="Script" path="res://src/entities/Entity.gd" id="4_en"]
+[ext_resource type="Script" path="res://src/ui/EntityUI.gd" id="5_ui"]
+
+[node name="Playground" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pg")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CardListPanel" type="PanelContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/CardListPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="HBoxContainer/CardListPanel/VBoxContainer"]
+layout_mode = 2
+text = "Card Library"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/CardListPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardList" type="VBoxContainer" parent="HBoxContainer/CardListPanel/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CombatArea" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CombatManager" type="Node" parent="HBoxContainer/CombatArea"]
+unique_name_in_owner = true
+script = ExtResource("2_cm")
+
+[node name="DeckManager" type="Node" parent="HBoxContainer/CombatArea/CombatManager"]
+script = ExtResource("3_dm")
+
+[node name="Player" type="Node2D" parent="HBoxContainer/CombatArea"]
+unique_name_in_owner = true
+position = Vector2(150, 300)
+script = ExtResource("4_en")
+
+[node name="EntityUI" type="Control" parent="HBoxContainer/CombatArea/Player"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("5_ui")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/CombatArea/Player/EntityUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HPBar" type="ProgressBar" parent="HBoxContainer/CombatArea/Player/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="HBoxContainer/CombatArea/Player/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="BlockLabel" type="Label" parent="HBoxContainer/CombatArea/Player/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="Dummy" type="Node2D" parent="HBoxContainer/CombatArea"]
+unique_name_in_owner = true
+position = Vector2(600, 300)
+script = ExtResource("4_en")
+
+[node name="EntityUI" type="Control" parent="HBoxContainer/CombatArea/Dummy"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("5_ui")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/CombatArea/Dummy/EntityUI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HPBar" type="ProgressBar" parent="HBoxContainer/CombatArea/Dummy/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="HBoxContainer/CombatArea/Dummy/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="BlockLabel" type="Label" parent="HBoxContainer/CombatArea/Dummy/EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="Controls" type="HBoxContainer" parent="HBoxContainer/CombatArea"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -100.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="ResetButton" type="Button" parent="HBoxContainer/CombatArea/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset Dummy"
+
+[node name="AddEnergyButton" type="Button" parent="HBoxContainer/CombatArea/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add Energy"
+
+[node name="ClearStatusButton" type="Button" parent="HBoxContainer/CombatArea/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Clear Status"
+
+[node name="BackButton" type="Button" parent="HBoxContainer/CombatArea/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back to Menu"
+
+[node name="EnergyLabel" type="Label" parent="HBoxContainer/CombatArea"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 20.0
+offset_top = 500.0
+offset_right = 120.0
+offset_bottom = 530.0
+text = "Energy: 3/3"
+
+[node name="HandUI" type="HBoxContainer" parent="HBoxContainer/CombatArea"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -250.0
+offset_right = 300.0
+offset_bottom = -100.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1

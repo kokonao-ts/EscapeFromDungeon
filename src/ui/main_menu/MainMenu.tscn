@@ -58,6 +58,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "設定"
 
+[node name="PlaygroundButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "測試場 (Playground)"
+
 [node name="QuitButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
@@ -66,4 +71,5 @@ text = "離開遊戲"
 [connection signal="pressed" from="VBoxContainer/NewGameButton" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="VBoxContainer/PlaygroundButton" to="." method="_on_playground_pressed"]
 [connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_quit_pressed"]
