@@ -28,6 +28,14 @@ func transition_to(new_state: State):
 	current_state = new_state
 	match current_state:
 		State.START_TURN:
+			# Frozen turn skipping
+			if player.stats.frozen > 0:
+				player.stats.frozen -= 1
+				player.update_ui()
+				print("Player frozen, skipping turn!")
+				transition_to(State.ENEMY_TURN)
+				return
+
 			player.stats.reset_block()
 			energy = max_energy
 			deck_manager.draw_cards(5)
@@ -44,8 +52,22 @@ func transition_to(new_state: State):
 			combat_finished.emit(false)
 
 func play_card(card: CardResource, target = null):
-	if energy >= card.cost:
-		energy -= card.cost
+	var actual_cost = card.cost
+	if card.free_if_chilled:
+		var has_chill = false
+		if target:
+			if target.stats.chill > 0:
+				has_chill = true
+		elif card.target == CardResource.Target.ALL_ENEMIES:
+			for e in enemies:
+				if e.is_alive() and e.stats.chill > 0:
+					has_chill = true
+					break
+		if has_chill:
+			actual_cost = 0
+
+	if energy >= actual_cost:
+		energy -= actual_cost
 
 		# Damage Calculation
 		var base_damage = card.damage
@@ -96,6 +118,24 @@ func play_card(card: CardResource, target = null):
 			player.stats.strength += card.strength
 			player.update_ui()
 
+		if card.burn > 0:
+			if target:
+				target.stats.burn += card.burn
+				target.update_ui()
+			elif card.target == CardResource.Target.ALL_ENEMIES:
+				for e in enemies:
+					if e.is_alive():
+						e.stats.burn += card.burn
+						e.update_ui()
+
+		if card.chill > 0:
+			if target:
+				apply_chill(target, card.chill)
+			elif card.target == CardResource.Target.ALL_ENEMIES:
+				for e in enemies:
+					if e.is_alive():
+						apply_chill(e, card.chill)
+
 		if card.self_damage > 0:
 			player.stats.lose_hp(card.self_damage)
 			player.update_ui()
@@ -111,29 +151,60 @@ func play_card(card: CardResource, target = null):
 
 func end_player_turn():
 	if current_state == State.PLAYER_TURN:
+		# Process Burn at end of player turn
+		_process_burn(player)
+
 		player.stats.end_turn()
 		player.update_ui()
 		deck_manager.discard_hand()
-		transition_to(State.ENEMY_TURN)
+
+		if player.stats.hp <= 0:
+			transition_to(State.LOSE)
+		else:
+			transition_to(State.ENEMY_TURN)
 
 func execute_enemy_turns():
 	for enemy in enemies:
 		if enemy.is_alive():
-			var damage = 6
-			# Simple implementation of status for enemies if they had stats
-			if enemy.stats.strength > 0:
-				damage += enemy.stats.strength
-			if enemy.stats.weak > 0:
-				damage = floor(damage * 0.75)
+			# Skip if frozen
+			if enemy.stats.frozen > 0:
+				enemy.stats.frozen -= 1
+				enemy.update_ui()
+				print("Enemy frozen, skipping turn!")
+				continue
 
-			player.take_damage(damage)
-			enemy.stats.end_turn()
+			if enemy is Enemy:
+				enemy.execute_turn(self, player)
+			else:
+				# Basic behavior fallback
+				var damage = 6
+				if enemy.stats.strength > 0:
+					damage += enemy.stats.strength
+				if enemy.stats.weak > 0:
+					damage = floor(damage * 0.75)
+				player.take_damage(damage)
+				enemy.stats.end_turn()
+
+			_process_burn(enemy)
 			enemy.update_ui()
 
 	if player.stats.hp <= 0:
 		transition_to(State.LOSE)
 	else:
 		transition_to(State.START_TURN)
+
+func _process_burn(entity):
+	if entity.stats.burn > 0:
+		entity.stats.lose_hp(entity.stats.burn)
+		entity.stats.burn = max(0, entity.stats.burn - 10)
+		entity.update_ui()
+
+func apply_chill(entity, stacks: int):
+	entity.stats.chill += stacks
+	if entity.stats.chill >= 10:
+		entity.stats.chill -= 10
+		entity.stats.frozen += 1
+	entity.update_ui()
 
 func check_enemies_alive():
 	var all_dead = true

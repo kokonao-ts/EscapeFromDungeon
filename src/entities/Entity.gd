@@ -27,5 +27,7 @@ func is_alive() -> bool:
 	return stats.hp > 0 if stats else false
 
 func update_ui():
+	if not entity_ui:
+		entity_ui = get_node_or_null("EntityUI")
 	if entity_ui:
 		entity_ui.update_stats(stats)
