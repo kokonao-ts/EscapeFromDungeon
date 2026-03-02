@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_hammer"]
+script = ExtResource("1_a")
+type = 0
+damage = 40
+cost = 3
+description = "Abyss Hammer"
+
+[sub_resource type="Resource" id="Resource_torture"]
+script = ExtResource("1_a")
+type = 3
+weak = 2
+vulnerable = 2
+cost = 2
+description = "Torture Curse"
+
+[sub_resource type="Resource" id="Resource_flame"]
+script = ExtResource("1_a")
+type = 0
+damage = 28
+burn = 2
+cost = 3
+description = "Purgatory Flame"
+
+[sub_resource type="Resource" id="Resource_guard"]
+script = ExtResource("1_a")
+type = 1
+block = 35
+cost = 1
+description = "Pluto Guard"
+
+[sub_resource type="Resource" id="Resource_bite"]
+script = ExtResource("1_a")
+type = 0
+damage = 10
+poison = 5
+cost = 2
+description = "Soul Bite"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "abyss_lord"
+enemy_name = "地獄深淵魔君"
+max_hp = 330
+energy_per_turn = 5
+actions = Array[ExtResource("1_a")]([SubResource("Resource_hammer"), SubResource("Resource_torture"), SubResource("Resource_flame"), SubResource("Resource_guard"), SubResource("Resource_bite")])
+action_weights = [0.2, 0.2, 0.2, 0.2, 0.2]

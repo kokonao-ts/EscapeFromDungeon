@@ -19,12 +19,13 @@ func select_intent():
 	selected_actions.clear()
 
 	var energy = enemy_resource.energy_per_turn
+	var actions_count = 0
+	var max_actions = enemy_resource.max_actions_per_turn if enemy_resource.max_actions_per_turn > 0 else 3
 
 	# Simple rotation or random based on weights for now, using energy system
-	# For simplicity, we choose actions until energy is exhausted
-	# If costs are 0, this could loop, so we add a limit
+	# For simplicity, we choose actions until energy or action limit is reached
 	var safety_limit = 10
-	while energy > 0 and safety_limit > 0:
+	while energy > 0 and actions_count < max_actions and safety_limit > 0:
 		safety_limit -= 1
 		var action: EnemyAction = null
 		if enemy_resource.action_weights.size() > 0:
@@ -45,9 +46,15 @@ func select_intent():
 			action = enemy_resource.actions[next_action_index]
 
 		if action:
+			# Only add if we have energy or if it's free
 			if action.cost <= energy:
+				# Prevent repeated free actions in same turn to avoid spamming
+				if action.cost == 0 and selected_actions.has(action):
+					break
+
 				selected_actions.append(action)
 				energy -= action.cost
+				actions_count += 1
 			else:
 				# Not enough energy for this action, stop choosing
 				break
@@ -67,6 +74,10 @@ func execute_turn(combat_manager, player):
 		# Apply damage
 		if action.damage > 0:
 			var damage = action.damage
+			# Special logic for Assassin: +10 damage if player is vulnerable
+			if enemy_resource and enemy_resource.enemy_id == "chaos_assassin" and player.stats.vulnerable > 0:
+				damage = 40
+
 			if stats.strength > 0:
 				damage += stats.strength
 			if stats.weak > 0:
@@ -81,9 +92,13 @@ func execute_turn(combat_manager, player):
 				if player.stats.electrified > 0:
 					self.take_damage(player.stats.electrified)
 
-		# Apply block
-		if action.block > 0:
-			add_block(action.block)
+		# Apply block or armor break
+		if action.block != 0:
+			if action.block > 0:
+				add_block(action.block)
+			else:
+				# Negative block = armor break (removes target block)
+				player.stats.block = max(0, player.stats.block + action.block)
 
 		# Apply buffs to self
 		if action.strength > 0:

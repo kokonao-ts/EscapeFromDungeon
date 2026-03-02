@@ -5,6 +5,7 @@ class_name EnemyResource
 @export var enemy_name: String = "Enemy"
 @export var max_hp: int = 50
 @export var energy_per_turn: int = 2
+@export var max_actions_per_turn: int = 3
 @export var actions: Array[EnemyAction] = []
 @export var behavior_script: GDScript # Optional: for complex logic
 

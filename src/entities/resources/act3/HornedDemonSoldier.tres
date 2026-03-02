@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_thrust"]
+script = ExtResource("1_a")
+type = 0
+damage = 20
+cost = 2
+description = "Horn Thrust"
+
+[sub_resource type="Resource" id="Resource_muscle"]
+script = ExtResource("1_a")
+type = 1
+block = 14
+cost = 1
+description = "Hard Muscle"
+
+[sub_resource type="Resource" id="Resource_berserk"]
+script = ExtResource("1_a")
+type = 2
+self_damage = 4
+strength = 5
+cost = 1
+description = "Berserk"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "horned_demon_soldier"
+enemy_name = "角魔兵"
+max_hp = 80
+energy_per_turn = 4
+actions = Array[ExtResource("1_a")]([SubResource("Resource_thrust"), SubResource("Resource_muscle"), SubResource("Resource_berserk")])
+action_weights = [0.4, 0.3, 0.3]

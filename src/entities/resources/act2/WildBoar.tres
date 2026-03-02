@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_ram"]
+script = ExtResource("1_a")
+type = 0
+damage = 16
+cost = 2
+description = "Ram"
+
+[sub_resource type="Resource" id="Resource_poke"]
+script = ExtResource("1_a")
+type = 0
+damage = 9
+cost = 1
+description = "Snout Poke"
+
+[sub_resource type="Resource" id="Resource_hide"]
+script = ExtResource("1_a")
+type = 1
+block = 10
+cost = 1
+description = "Hard Hide"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "wild_boar"
+enemy_name = "山豬"
+max_hp = 45
+energy_per_turn = 3
+actions = Array[ExtResource("1_a")]([SubResource("Resource_ram"), SubResource("Resource_poke"), SubResource("Resource_hide")])
+action_weights = [0.4, 0.3, 0.3]

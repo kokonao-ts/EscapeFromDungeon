@@ -61,7 +61,7 @@ func end_turn():
 		slow -= 1
 	if draw_reduction > 0:
 		draw_reduction -= 1
-	# Evasion usually expires at end of turn in Slay the Spire clones
+	# Evasion usually expires at end of turn
 	if evasion > 0:
 		evasion = 0
 	# Burn, Chill/Frozen, and Poison are typically handled by CombatManager

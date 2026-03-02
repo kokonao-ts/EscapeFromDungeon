@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_trap"]
+script = ExtResource("1_a")
+type = 3
+damage = 8
+vulnerable = 1
+cost = 1
+description = "Trap Set"
+
+[sub_resource type="Resource" id="Resource_net"]
+script = ExtResource("1_a")
+type = 3
+attack_lock = 1
+cost = 1
+description = "Net Bind"
+
+[sub_resource type="Resource" id="Resource_stab"]
+script = ExtResource("1_a")
+type = 0
+damage = 7
+cost = 1
+description = "Dagger Stab"
+
+[sub_resource type="Resource" id="Resource_ambush"]
+script = ExtResource("1_a")
+type = 0
+damage = 12
+cost = 2
+description = "Ambush"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "bounty_trapper"
+enemy_name = "捕獸者"
+max_hp = 38
+energy_per_turn = 3
+actions = Array[ExtResource("1_a")]([SubResource("Resource_trap"), SubResource("Resource_net"), SubResource("Resource_stab"), SubResource("Resource_ambush")])
+action_weights = [0.25, 0.25, 0.25, 0.25]

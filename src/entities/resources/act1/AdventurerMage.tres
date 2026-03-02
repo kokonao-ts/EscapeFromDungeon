@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_fireball"]
+script = ExtResource("1_a")
+type = 0
+damage = 7
+cost = 1
+description = "Fireball"
+
+[sub_resource type="Resource" id="Resource_charge"]
+script = ExtResource("1_a")
+type = 8
+cost = 0
+description = "Mana Charge"
+
+[sub_resource type="Resource" id="Resource_burst"]
+script = ExtResource("1_a")
+type = 0
+damage = 10
+burn = 2
+cost = 2
+description = "Flame Burst"
+
+[sub_resource type="Resource" id="Resource_shield"]
+script = ExtResource("1_a")
+type = 1
+block = 9
+cost = 1
+description = "Magic Shield"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "adventurer_mage"
+enemy_name = "法師"
+max_hp = 30
+energy_per_turn = 3
+actions = Array[ExtResource("1_a")]([SubResource("Resource_fireball"), SubResource("Resource_charge"), SubResource("Resource_burst"), SubResource("Resource_shield")])
+action_weights = [0.3, 0.2, 0.3, 0.2]
