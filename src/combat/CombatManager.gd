@@ -145,6 +145,16 @@ func play_card(card: CardResource, target = null):
 		else:
 			deck_manager.discard_card(card)
 
+		# Possession mechanic for Goblin Assassin
+		if RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN:
+			if card.card_id == "execute_knife" and target and not target.is_alive():
+				if target is Enemy and target.enemy_resource:
+					print("Possessing %s!" % target.enemy_resource.enemy_name)
+					RunManager.possess_enemy(target.enemy_resource)
+					# Reset deck for the new body during combat
+					deck_manager.setup_deck(RunManager.deck)
+					player.update_ui()
+
 		check_enemies_alive()
 	else:
 		print("Not enough energy!")
@@ -159,6 +169,14 @@ func end_player_turn():
 		deck_manager.discard_hand()
 
 		if player.stats.hp <= 0:
+			if RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN:
+				if RunManager.revert_to_core():
+					print("Body died! Reverting to core...")
+					deck_manager.setup_deck(RunManager.deck)
+					player.update_ui()
+					transition_to(State.ENEMY_TURN)
+					return
+
 			transition_to(State.LOSE)
 		else:
 			transition_to(State.ENEMY_TURN)
@@ -189,6 +207,14 @@ func execute_enemy_turns():
 			enemy.update_ui()
 
 	if player.stats.hp <= 0:
+		if RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN:
+			if RunManager.revert_to_core():
+				print("Body died! Reverting to core...")
+				deck_manager.setup_deck(RunManager.deck)
+				player.update_ui()
+				transition_to(State.START_TURN)
+				return
+
 		transition_to(State.LOSE)
 	else:
 		transition_to(State.START_TURN)

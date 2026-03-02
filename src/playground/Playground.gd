@@ -23,7 +23,8 @@ func _ready():
 	reset_dummy()
 
 	combat_manager.deck_manager.hand_updated.connect(_on_hand_updated)
-	combat_manager.start_combat(player, [dummy], [])
+	var empty_deck: Array[CardResource] = []
+	combat_manager.start_combat(player, [dummy], empty_deck)
 
 	# Connect buttons
 	reset_button.pressed.connect(reset_dummy)
