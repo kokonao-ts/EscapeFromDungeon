@@ -4,32 +4,52 @@ extends Node2D
 @onready var hand_ui = $CanvasLayer/HandUI
 @onready var energy_label = $CanvasLayer/UI/EnergyLabel
 @onready var player = $Player
-@onready var enemy = $Enemy
+@onready var enemies_container = $Enemies
 
 var card_ui_scene = preload("res://src/ui/CardUI.tscn")
 var battle_reward_scene = preload("res://src/ui/BattleReward.tscn")
+var enemy_scene = preload("res://src/entities/Enemy.tscn")
+
+var selected_enemy: Enemy = null
 
 func _ready():
 	# Use data from RunManager
 	player.stats = RunManager.player_stats
 
-	# Setup enemy based on RunManager data
+	# Setup enemies based on RunManager data
 	var map = RunManager.get_map()
 	var current_node = map.nodes[RunManager.current_node_index]
-	var enemy_res = current_node.data.get("enemy_resource")
 
-	if enemy_res and enemy_res is EnemyResource:
-		enemy.set_script(load("res://src/entities/Enemy.gd"))
-		enemy.setup(enemy_res)
+	var enemies_list = []
+	var enemy_resources = current_node.data.get("enemies")
+	if enemy_resources:
+		var i = 0
+		for res in enemy_resources:
+			var enemy_inst = enemy_scene.instantiate()
+			enemies_container.add_child(enemy_inst)
+			enemy_inst.setup(res)
+			# Distribute enemies
+			enemy_inst.position = Vector2(800, 200 + i * 150)
+			enemies_list.append(enemy_inst)
+			i += 1
 	else:
-		# Fallback to simple enemy
-		enemy.stats = Stats.new()
-		enemy.stats.max_hp = 50
-		enemy.stats.hp = 50
+		# Compatibility with old single-enemy data
+		var enemy_res = current_node.data.get("enemy_resource")
+		var enemy_inst = enemy_scene.instantiate()
+		enemies_container.add_child(enemy_inst)
+		if enemy_res:
+			enemy_inst.setup(enemy_res)
+		else:
+			var stats = Stats.new()
+			stats.max_hp = 50
+			stats.hp = 50
+			enemy_inst.stats = stats
+		enemy_inst.position = Vector2(800, 400)
+		enemies_list.append(enemy_inst)
 
 	combat_manager.deck_manager.hand_updated.connect(_on_hand_updated)
 	combat_manager.combat_finished.connect(_on_combat_finished)
-	combat_manager.start_combat(player, [enemy], RunManager.deck)
+	combat_manager.start_combat(player, enemies_list, RunManager.deck)
 
 	$CanvasLayer/EndTurnButton.pressed.connect(_on_end_turn_pressed)
 	$CanvasLayer/MenuButton.pressed.connect(_on_menu_pressed)
@@ -42,8 +62,22 @@ func _unhandled_input(event):
 		if event.keycode == KEY_F12:
 			$CanvasLayer/DebugUI.visible = !$CanvasLayer/DebugUI.visible
 
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		# Check if an enemy was clicked for targeting
+		for enemy in combat_manager.enemies:
+			if enemy.is_alive():
+				# Simple rect check for targeting if not using areas
+				var mouse_pos = get_local_mouse_position()
+				if mouse_pos.distance_to(enemy.position) < 100: # Approximate
+					selected_enemy = enemy
+					print("Selected enemy: ", enemy.enemy_resource.enemy_name if enemy.enemy_resource else "Enemy")
+					break
+
 func _on_kill_enemy_pressed():
-	enemy.take_damage(999)
+	for enemy in combat_manager.enemies:
+		if enemy.is_alive():
+			enemy.take_damage(999)
+			break
 	combat_manager.check_enemies_alive()
 
 func _on_kill_player_pressed():
@@ -64,7 +98,15 @@ func _on_hand_updated():
 		card_ui.card_played.connect(_on_card_played)
 
 func _on_card_played(card_ui):
-	combat_manager.play_card(card_ui.card_resource, enemy)
+	# If no enemy selected, pick the first alive one
+	var target = selected_enemy
+	if not target or not target.is_alive():
+		for e in combat_manager.enemies:
+			if e.is_alive():
+				target = e
+				break
+
+	combat_manager.play_card(card_ui.card_resource, target)
 	update_ui()
 
 func _on_end_turn_pressed():
@@ -114,4 +156,5 @@ func update_ui():
 	if energy_label:
 		energy_label.text = "Energy: %d/%d" % [combat_manager.energy, combat_manager.max_energy]
 	player.update_ui()
-	enemy.update_ui()
+	for enemy in combat_manager.enemies:
+		enemy.update_ui()

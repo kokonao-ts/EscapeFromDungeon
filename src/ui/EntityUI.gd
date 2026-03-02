@@ -33,20 +33,36 @@ func update_stats(stats: Stats):
 
 	var status_text = ""
 	if stats.strength != 0:
-		status_text += " Str: %d" % stats.strength
+		status_text += " Str:%d" % stats.strength
 	if stats.vulnerable > 0:
-		status_text += " Vul: %d" % stats.vulnerable
+		status_text += " Vul:%d" % stats.vulnerable
 	if stats.weak > 0:
-		status_text += " Weak: %d" % stats.weak
+		status_text += " Weak:%d" % stats.weak
 	if stats.burn > 0:
-		status_text += " Burn: %d" % stats.burn
+		status_text += " Burn:%d" % stats.burn
 	if stats.chill > 0:
-		status_text += " Chill: %d" % stats.chill
+		status_text += " Chill:%d" % stats.chill
 	if stats.frozen > 0:
-		status_text += " Frozen: %d" % stats.frozen
+		status_text += " Frozen:%d" % stats.frozen
+	if stats.poison > 0:
+		status_text += " Poison:%d" % stats.poison
+	if stats.evasion > 0:
+		status_text += " Evade:%d" % stats.evasion
+	if stats.thorns > 0:
+		status_text += " Thorn:%d" % stats.thorns
+	if stats.electrified > 0:
+		status_text += " Elec:%d" % stats.electrified
+	if stats.slow > 0:
+		status_text += " Slow:%d" % stats.slow
+	if stats.draw_reduction > 0:
+		status_text += " Draw-:%d" % stats.draw_reduction
+	if stats.stunned > 0:
+		status_text += " Stun:%d" % stats.stunned
+	if stats.attack_locked > 0:
+		status_text += " Lock:%d" % stats.attack_locked
 
-	hp_label.text = "HP: %d/%d%s" % [stats.hp, stats.max_hp, status_text]
-	block_label.text = "Block: %d" % stats.block
+	hp_label.text = "HP:%d/%d%s" % [stats.hp, stats.max_hp, status_text]
+	block_label.text = "Block:%d" % stats.block
 	block_label.visible = stats.block > 0
 
 	# Show name and intent if this belongs to an enemy
@@ -61,24 +77,35 @@ func update_stats(stats: Stats):
 		else:
 			name_label.visible = false
 
-		if owner_node.current_action:
-			var action = owner_node.current_action
-			var intent_text = "Intent: "
-			match action.type:
-				EnemyAction.Type.ATTACK:
-					var damage = action.damage
-					if owner_node.stats.strength > 0:
-						damage += owner_node.stats.strength
-					if owner_node.stats.weak > 0:
-						damage = floor(damage * 0.75)
-					intent_text += "Attack %d" % damage
-				EnemyAction.Type.DEFEND:
-					intent_text += "Defend %d" % action.block
-				EnemyAction.Type.BUFF:
-					intent_text += "Buff"
-				EnemyAction.Type.DEBUFF:
-					intent_text += "Debuff"
-			intent_label.text = intent_text
+		if not owner_node.selected_actions.is_empty():
+			var intents = []
+			for action in owner_node.selected_actions:
+				match action.type:
+					EnemyAction.Type.ATTACK:
+						var damage = action.damage
+						if owner_node.stats.strength > 0:
+							damage += owner_node.stats.strength
+						if owner_node.stats.weak > 0:
+							damage = floor(damage * 0.75)
+						if action.hits > 1:
+							intents.append("Atk %dx%d" % [damage, action.hits])
+						else:
+							intents.append("Atk %d" % damage)
+					EnemyAction.Type.DEFEND:
+						intents.append("Def %d" % action.block)
+					EnemyAction.Type.BUFF:
+						intents.append("Buff")
+					EnemyAction.Type.DEBUFF:
+						intents.append("Debuff")
+					EnemyAction.Type.HEAL:
+						intents.append("Heal")
+					EnemyAction.Type.SUMMON:
+						intents.append("Summon")
+					EnemyAction.Type.SPLIT:
+						intents.append("Split")
+					_:
+						intents.append("Action")
+			intent_label.text = "Intent: " + ", ".join(intents)
 			intent_label.visible = true
 		else:
 			if intent_label:

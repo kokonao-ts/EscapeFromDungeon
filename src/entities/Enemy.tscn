@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/entities/Enemy.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/ui/EntityUI.gd" id="2_b"]
+
+[node name="Enemy" type="Node2D"]
+script = ExtResource("1_a")
+
+[node name="EntityUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_b")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="EntityUI"]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+
+[node name="HPBar" type="ProgressBar" parent="EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="EntityUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="BlockLabel" type="Label" parent="EntityUI/VBoxContainer"]
+layout_mode = 2

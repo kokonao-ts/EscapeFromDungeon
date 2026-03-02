@@ -2,8 +2,9 @@ extends Entity
 class_name Enemy
 
 @export var enemy_resource: EnemyResource
-var current_action: EnemyAction
+var selected_actions: Array[EnemyAction] = []
 var next_action_index: int = -1
+var split_triggered: bool = false
 
 func setup(resource: EnemyResource):
 	enemy_resource = resource
@@ -15,53 +16,134 @@ func setup(resource: EnemyResource):
 
 func select_intent():
 	if not enemy_resource: return
+	selected_actions.clear()
 
-	# Simple rotation or random based on weights for now
-	if enemy_resource.action_weights.size() > 0:
-		var total_weight = 0.0
-		for w in enemy_resource.action_weights:
-			total_weight += w
+	var energy = enemy_resource.energy_per_turn
 
-		var r = randf() * total_weight
-		var current_sum = 0.0
-		for i in range(enemy_resource.action_weights.size()):
-			current_sum += enemy_resource.action_weights[i]
-			if r <= current_sum:
-				next_action_index = i
+	# Simple rotation or random based on weights for now, using energy system
+	# For simplicity, we choose actions until energy is exhausted
+	# If costs are 0, this could loop, so we add a limit
+	var safety_limit = 10
+	while energy > 0 and safety_limit > 0:
+		safety_limit -= 1
+		var action: EnemyAction = null
+		if enemy_resource.action_weights.size() > 0:
+			var total_weight = 0.0
+			for w in enemy_resource.action_weights:
+				total_weight += w
+
+			var r = randf() * total_weight
+			var current_sum = 0.0
+			for i in range(enemy_resource.action_weights.size()):
+				current_sum += enemy_resource.action_weights[i]
+				if r <= current_sum:
+					action = enemy_resource.actions[i]
+					break
+		else:
+			# Sequential
+			next_action_index = (next_action_index + 1) % enemy_resource.actions.size()
+			action = enemy_resource.actions[next_action_index]
+
+		if action:
+			if action.cost <= energy:
+				selected_actions.append(action)
+				energy -= action.cost
+			else:
+				# Not enough energy for this action, stop choosing
 				break
-	else:
-		# Sequential
-		next_action_index = (next_action_index + 1) % enemy_resource.actions.size()
+		else:
+			break
 
-	current_action = enemy_resource.actions[next_action_index]
 	update_ui()
 
 func execute_turn(combat_manager, player):
-	if not current_action: return
+	if selected_actions.is_empty():
+		stats.end_turn()
+		update_ui()
+		select_intent()
+		return
 
-	# Apply damage
-	if current_action.damage > 0:
-		var damage = current_action.damage
-		if stats.strength > 0:
-			damage += stats.strength
-		if stats.weak > 0:
-			damage = floor(damage * 0.75)
-		player.take_damage(damage)
+	for action in selected_actions:
+		# Apply damage
+		if action.damage > 0:
+			var damage = action.damage
+			if stats.strength > 0:
+				damage += stats.strength
+			if stats.weak > 0:
+				damage = floor(damage * 0.75)
 
-	# Apply block
-	if current_action.block > 0:
-		add_block(current_action.block)
+			for i in range(action.hits):
+				player.take_damage(damage)
+				# Apply thorns damage back to enemy if player has thorns
+				if player.stats.thorns > 0:
+					self.take_damage(player.stats.thorns)
 
-	# Apply buffs
-	if current_action.strength > 0:
-		stats.strength += current_action.strength
+		# Apply block
+		if action.block > 0:
+			add_block(action.block)
 
-	# Apply debuffs to player
-	if current_action.vulnerable > 0 or current_action.weak > 0:
-		player.stats.vulnerable += current_action.vulnerable
-		player.stats.weak += current_action.weak
+		# Apply buffs to self
+		if action.strength > 0:
+			stats.strength += action.strength
+		if action.evasion > 0:
+			stats.evasion += action.evasion
+		if action.thorns > 0:
+			stats.thorns += action.thorns
+		if action.electrified > 0:
+			stats.electrified += action.electrified
+		if action.heal > 0:
+			stats.hp = min(stats.max_hp, stats.hp + action.heal)
+
+		# Apply debuffs to player
+		if action.vulnerable > 0:
+			player.stats.vulnerable += action.vulnerable
+		if action.weak > 0:
+			player.stats.weak += action.weak
+		if action.poison > 0:
+			player.stats.poison += action.poison
+		if action.burn > 0:
+			player.stats.burn += action.burn
+		if action.chill > 0:
+			combat_manager.apply_chill(player, action.chill)
+		if action.slow > 0:
+			player.stats.slow += action.slow
+		if action.draw_reduction > 0:
+			player.stats.draw_reduction += action.draw_reduction
+		if action.stun > 0:
+			player.stats.stunned += action.stun
+		if action.attack_lock > 0:
+			player.stats.attack_locked += action.attack_lock
+
+		# Self damage
+		if action.self_damage > 0:
+			self.take_damage(action.self_damage)
+
+		# Summon/Split
+		if action.type == EnemyAction.Type.SUMMON and action.summon_enemy:
+			combat_manager.spawn_enemy(action.summon_enemy)
+
 		player.update_ui()
+		if not is_alive():
+			break
 
 	stats.end_turn()
 	update_ui()
 	select_intent() # Select next intent after turn
+
+func take_damage(amount: int):
+	super.take_damage(amount)
+	# Check for splitting
+	if is_alive() and not split_triggered and enemy_resource and not enemy_resource.split_result.is_empty():
+		if float(stats.hp) / stats.max_hp <= enemy_resource.split_hp_threshold:
+			split_triggered = true
+			trigger_split()
+
+func trigger_split():
+	print("%s is splitting!" % enemy_resource.enemy_name)
+	var combat_manager = get_tree().root.find_child("CombatManager", true, false)
+	if combat_manager:
+		for res in enemy_resource.split_result:
+			combat_manager.spawn_enemy(res)
+		# After splitting, the original usually disappears or changes
+		# For simplicity, we kill the original
+		self.take_damage(9999)

@@ -12,7 +12,22 @@ class_name Stats
 @export var chill: int = 0
 @export var frozen: int = 0
 
+# New status effects
+@export var poison: int = 0
+@export var evasion: int = 0
+@export var thorns: int = 0
+@export var electrified: int = 0
+@export var slow: int = 0
+@export var draw_reduction: int = 0
+@export var stunned: int = 0
+@export var attack_locked: int = 0
+
 func take_damage(amount: int):
+	if evasion > 0:
+		evasion -= 1
+		print("Evaded attack!")
+		return
+
 	var modified_damage = amount
 	if vulnerable > 0:
 		modified_damage = floor(modified_damage * 1.5)
@@ -38,4 +53,12 @@ func end_turn():
 		weak -= 1
 	if vulnerable > 0:
 		vulnerable -= 1
-	# Burn and Chill/Frozen are typically handled by CombatManager as per memory
+	if stunned > 0:
+		stunned -= 1
+	if attack_locked > 0:
+		attack_locked -= 1
+	if slow > 0:
+		slow -= 1
+	if draw_reduction > 0:
+		draw_reduction -= 1
+	# Burn, Chill/Frozen, and Poison are typically handled by CombatManager

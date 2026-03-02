@@ -124,25 +124,69 @@ func get_map() -> MapAct:
 func generate_act(act_num: int):
 	current_map = MapAct.new(act_num)
 
-	var possible_enemies = [
-		load("res://src/entities/resources/JawWorm.tres"),
-		load("res://src/entities/resources/Cultist.tres"),
-		load("res://src/entities/resources/SmallSlime.tres")
-	]
+	var pool_path = "res://src/entities/resources/act%d/" % act_num
+	var boss_path = "res://src/entities/resources/boss/"
+
+	var normal_enemies = []
+	var bosses = []
+
+	# Try to load from new structure, fallback to old if not found
+	var dir = DirAccess.open(pool_path)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if file_name.ends_with(".tres"):
+				normal_enemies.append(load(pool_path + file_name))
+			file_name = dir.get_next()
+
+	dir = DirAccess.open(boss_path)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if file_name.ends_with(".tres"):
+				bosses.append(load(boss_path + file_name))
+			file_name = dir.get_next()
+
+	# Fallback to defaults if pools are empty
+	if normal_enemies.is_empty():
+		normal_enemies = [
+			load("res://src/entities/resources/JawWorm.tres"),
+			load("res://src/entities/resources/Cultist.tres"),
+			load("res://src/entities/resources/SmallSlime.tres")
+		]
+	if bosses.is_empty():
+		bosses = [normal_enemies[0]]
 
 	# Basic linear act for now: 5 combats and a boss
 	for i in range(5):
 		var node = MapNode.new()
 		node.type = MapNode.Type.COMBAT
 		node.position = Vector2(0, i * 100)
-		# Assign a random enemy
-		node.data["enemy_resource"] = possible_enemies[randi() % possible_enemies.size()]
+
+		# For Act 3, maybe have multiple enemies?
+		if act_num == 3 and randf() > 0.5:
+			var ens = []
+			ens.append(normal_enemies[randi() % normal_enemies.size()])
+			ens.append(normal_enemies[randi() % normal_enemies.size()])
+			node.data["enemies"] = ens
+		else:
+			node.data["enemy_resource"] = normal_enemies[randi() % normal_enemies.size()]
+
 		current_map.nodes.append(node)
 
 	var boss = MapNode.new()
 	boss.type = MapNode.Type.BOSS
 	boss.position = Vector2(0, 500)
-	boss.data["enemy_resource"] = possible_enemies[0] # Use Jaw Worm as boss for now
+
+	# If final act (3 or hidden 4), use specific bosses
+	if act_num == 4:
+		var naraku = load("res://src/entities/resources/boss/NarakuAbyss.tres")
+		boss.data["enemy_resource"] = naraku if naraku else bosses[0]
+	else:
+		boss.data["enemy_resource"] = bosses[randi() % bosses.size()]
+
 	current_map.nodes.append(boss)
 
 func get_card_pool() -> Array[CardResource]:
@@ -182,7 +226,8 @@ func possess_enemy(enemy_res: EnemyResource):
 		card.strength = action.strength
 		card.vulnerable = action.vulnerable
 		card.weak = action.weak
-		card.cost = 1 # Default cost for enemy moves
+		card.cost = action.cost
+		card.hits = action.hits
 		card.character_class = character_class
 		card.icon = "card_placeholder.png"
 		enemy_deck.append(card)
