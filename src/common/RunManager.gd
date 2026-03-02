@@ -1,6 +1,6 @@
 extends Node
 
-enum CharacterClass { IRONCLAD, SILENT, WATCHER, NEUTRAL, GOBLIN_ASSASSIN }
+enum CharacterClass { IRONCLAD, SILENT, WATCHER, NEUTRAL, GOBLIN_ASSASSIN, GOBLIN_MAGE, GOBLIN_SHARED }
 
 var player_stats: Stats
 var deck: Array[CardResource] = []
@@ -64,6 +64,18 @@ func initialize_run(p_class: CharacterClass = CharacterClass.IRONCLAD):
 			core_body.hp = 50
 			core_body.deck.assign([execute_knife])
 			bodies.append(core_body)
+		CharacterClass.GOBLIN_MAGE:
+			player_stats.max_hp = 40
+			var body_swap = load("res://src/cards/resources/BodySwap.tres")
+			fixed_cards.assign([body_swap])
+			deck.assign([body_swap])
+
+			var core_body = Body.new()
+			core_body.name = "哥布林法師"
+			core_body.max_hp = 40
+			core_body.hp = 40
+			core_body.deck.assign([body_swap])
+			bodies.append(core_body)
 
 	player_stats.hp = player_stats.max_hp
 	gold = 99
@@ -115,9 +127,13 @@ func get_card_pool() -> Array[CardResource]:
 		while file_name != "":
 			if file_name.ends_with(".tres"):
 				var card = load(all_cards_path + file_name) as CardResource
-				# 3 is NEUTRAL
-				if card and (card.character_class == character_class or card.character_class == 3):
-					pool.append(card)
+				# 3 is NEUTRAL, 6 is GOBLIN_SHARED
+				var is_goblin = character_class == CharacterClass.GOBLIN_ASSASSIN or character_class == CharacterClass.GOBLIN_MAGE
+				if card:
+					if card.character_class == character_class or card.character_class == 3:
+						pool.append(card)
+					elif is_goblin and card.character_class == 6:
+						pool.append(card)
 			file_name = dir.get_next()
 	return pool
 
@@ -139,14 +155,14 @@ func possess_enemy(enemy_res: EnemyResource):
 		card.vulnerable = action.vulnerable
 		card.weak = action.weak
 		card.cost = 1 # Default cost for enemy moves
-		card.character_class = CharacterClass.GOBLIN_ASSASSIN
+		card.character_class = character_class
 		card.icon = "card_placeholder.png"
 		enemy_deck.append(card)
 
 	# If no actions, give some default strikes
 	if enemy_deck.is_empty():
 		var strike = load("res://src/cards/resources/Strike.tres").duplicate()
-		strike.character_class = CharacterClass.GOBLIN_ASSASSIN
+		strike.character_class = character_class
 		strike.card_name = "Strike (Fallback)"
 		enemy_deck = [strike, strike, strike]
 
@@ -160,8 +176,8 @@ func switch_body(index: int):
 	if index < 0 or index >= bodies.size():
 		return
 
-	# Save current HP if we are in a run
-	if is_run_active:
+	# Save current HP if we are in a run and current index is still valid
+	if is_run_active and current_body_index < bodies.size():
 		bodies[current_body_index].hp = player_stats.hp
 
 	current_body_index = index
@@ -186,5 +202,7 @@ func revert_to_core():
 
 	# Current body is dead
 	bodies.remove_at(current_body_index)
+	# Set to invalid index so switch_body doesn't try to save HP to the shifted array
+	current_body_index = -1
 	switch_body(0)
 	return true

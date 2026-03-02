@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/cards/CardResource.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+card_id = "goblin_rally"
+card_name = "哥布林集結"
+character_class = 6
+cost = 1
+type = 1
+target = 1
+icon = "card_placeholder.png"
+description = "獲得 8 點護甲。
+若本回合已出過攻擊牌，額外獲得 4 點護甲。"
+damage = 0
+block = 8
+draw_cards = 0
+energy_gain = 0
+hits = 1
+vulnerable = 0
+weak = 0
+strength = 0
+burn = 0
+chill = 0
+exhaust = false
+self_damage = 0
+free_if_chilled = false
