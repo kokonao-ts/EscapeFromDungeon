@@ -100,9 +100,15 @@ func execute_turn(combat_manager, player):
 				# Negative block = armor break (removes target block)
 				player.stats.block = max(0, player.stats.block + action.block)
 
-		# Apply buffs to self
-		if action.strength > 0:
-			stats.strength += action.strength
+		# Apply buffs to self or debuffs to player
+		if action.strength != 0:
+			if action.type == EnemyAction.Type.DEBUFF:
+				# Debuff intended for player (like Intimidate)
+				player.stats.strength += action.strength
+			else:
+				# Buff intended for self
+				stats.strength += action.strength
+
 		if action.evasion > 0:
 			stats.evasion += action.evasion
 		if action.thorns > 0:
