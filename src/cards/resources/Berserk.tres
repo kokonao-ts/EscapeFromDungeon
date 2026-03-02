@@ -4,19 +4,19 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
-cost = 1
-type = 0
-target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+card_id = "berserk"
+card_name = "Berserk"
+cost = 0
+type = 2
+target = 1
+icon = "card_placeholder.png"
+description = "Gain 2 Vulnerable. At the start of your turn, gain 1 Energy."
+damage = 0
 block = 0
 draw_cards = 0
 energy_gain = 0
 hits = 1
-vulnerable = 0
+vulnerable = 2
 weak = 0
 strength = 0
 exhaust = false

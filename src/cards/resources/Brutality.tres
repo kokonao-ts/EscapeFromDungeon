@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
-cost = 1
-type = 0
-target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+card_id = "brutality"
+card_name = "Brutality"
+cost = 0
+type = 2
+target = 1
+icon = "card_placeholder.png"
+description = "At the start of your turn, lose 1 HP and draw 1 card."
+damage = 0
 block = 0
 draw_cards = 0
 energy_gain = 0

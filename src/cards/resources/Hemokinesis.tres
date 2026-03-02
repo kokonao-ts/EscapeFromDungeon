@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
+card_id = "hemokinesis"
+card_name = "Hemokinesis"
 cost = 1
 type = 0
 target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+icon = "card_placeholder.png"
+description = "Lose 2 HP. Deal 15 damage."
+damage = 15
 block = 0
 draw_cards = 0
 energy_gain = 0
@@ -20,4 +20,4 @@ vulnerable = 0
 weak = 0
 strength = 0
 exhaust = false
-self_damage = 0
+self_damage = 2

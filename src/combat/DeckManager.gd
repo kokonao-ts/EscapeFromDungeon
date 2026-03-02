@@ -6,12 +6,14 @@ signal hand_updated
 var draw_pile: Array[CardResource] = []
 var hand: Array[CardResource] = []
 var discard_pile: Array[CardResource] = []
+var exhaust_pile: Array[CardResource] = []
 
 func setup_deck(starting_deck: Array[CardResource]):
 	draw_pile = starting_deck.duplicate()
 	draw_pile.shuffle()
 	hand = []
 	discard_pile = []
+	exhaust_pile = []
 
 func draw_cards(amount: int):
 	for i in range(amount):
@@ -35,6 +37,13 @@ func discard_card(card: CardResource):
 	if idx != -1:
 		hand.remove_at(idx)
 		discard_pile.append(card)
+		hand_updated.emit()
+
+func exhaust_card(card: CardResource):
+	var idx = hand.find(card)
+	if idx != -1:
+		hand.remove_at(idx)
+		exhaust_pile.append(card)
 		hand_updated.emit()
 
 func discard_hand():

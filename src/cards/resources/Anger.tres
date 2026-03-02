@@ -4,13 +4,13 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
-cost = 1
+card_id = "anger"
+card_name = "Anger"
+cost = 0
 type = 0
 target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
+icon = "card_placeholder.png"
+description = "Deal 6 damage. Add a copy of this card to your discard pile."
 damage = 6
 block = 0
 draw_cards = 0

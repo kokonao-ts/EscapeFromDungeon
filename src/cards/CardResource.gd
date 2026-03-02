@@ -10,12 +10,23 @@ enum Target { ENEMY, SELF, ALL_ENEMIES }
 @export var type: Type = Type.ATTACK
 @export var target: Target = Target.ENEMY
 @export var icon: String = "card_placeholder.png"
-@export var description: String = ""
+@export_multiline var description: String = ""
 
+@export_group("Effects")
 @export var damage: int = 0
 @export var block: int = 0
 @export var draw_cards: int = 0
 @export var energy_gain: int = 0
+@export var hits: int = 1
+
+@export_group("Statuses")
+@export var vulnerable: int = 0
+@export var weak: int = 0
+@export var strength: int = 0
+
+@export_group("Special")
+@export var exhaust: bool = false
+@export var self_damage: int = 0
 
 func apply_effects(user, targets):
 	# Basic implementation to be expanded in CombatManager or Entity logic
