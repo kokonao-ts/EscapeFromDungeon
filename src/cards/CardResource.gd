@@ -3,7 +3,7 @@ class_name CardResource
 
 enum Type { ATTACK, SKILL, POWER }
 enum Target { ENEMY, SELF, ALL_ENEMIES }
-enum CharacterClass { IRONCLAD, SILENT, WATCHER, NEUTRAL }
+enum CharacterClass { IRONCLAD, SILENT, WATCHER, NEUTRAL, GOBLIN_ASSASSIN, GOBLIN_MAGE, GOBLIN_SHARED }
 
 @export var card_id: String = ""
 @export var card_name: String = "Card"

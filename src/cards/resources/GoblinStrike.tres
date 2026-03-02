@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/cards/CardResource.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+card_id = "goblin_strike"
+card_name = "哥布林打擊"
+character_class = 6
+cost = 1
+type = 0
+target = 0
+icon = "card_placeholder.png"
+description = "造成 7 點傷害。
+抽 1 張牌。"
+damage = 7
+block = 0
+draw_cards = 1
+energy_gain = 0
+hits = 1
+vulnerable = 0
+weak = 0
+strength = 0
+burn = 0
+chill = 0
+exhaust = false
+self_damage = 0
+free_if_chilled = false
