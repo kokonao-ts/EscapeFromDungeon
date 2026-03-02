@@ -188,7 +188,9 @@ func end_player_turn():
 		deck_manager.discard_hand()
 
 		if player.stats.hp <= 0:
-			if RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN:
+			var is_goblin = RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN or \
+							RunManager.character_class == RunManager.CharacterClass.GOBLIN_MAGE
+			if is_goblin:
 				if RunManager.revert_to_core():
 					print("Body died! Reverting to core...")
 					deck_manager.setup_deck(RunManager.deck)
@@ -227,7 +229,9 @@ func execute_enemy_turns():
 			enemy.update_ui()
 
 	if player.stats.hp <= 0:
-		if RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN:
+		var is_goblin = RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN or \
+						RunManager.character_class == RunManager.CharacterClass.GOBLIN_MAGE
+		if is_goblin:
 			if RunManager.revert_to_core():
 				print("Body died! Reverting to core...")
 				deck_manager.setup_deck(RunManager.deck)

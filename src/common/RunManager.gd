@@ -103,6 +103,8 @@ func initialize_run(p_class: CharacterClass = CharacterClass.IRONCLAD):
 			core_body.deck.assign(start_deck)
 			bodies.append(core_body)
 
+	# Build initial deck using switch_body logic
+	switch_body(0)
 	player_stats.hp = player_stats.max_hp
 	gold = 99
 	current_act = 1
