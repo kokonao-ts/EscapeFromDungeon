@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://src/cards/CardResource.gd" id="1_y"]
+[ext_resource type="Script" path="res://src/cards/CardResource.gd" id="1_x"]
 
 [resource]
-script = ExtResource("1_y")
+script = ExtResource("1_x")
 card_id = "defend"
 card_name = "Defend"
 cost = 1
@@ -15,3 +15,9 @@ damage = 0
 block = 5
 draw_cards = 0
 energy_gain = 0
+hits = 1
+vulnerable = 0
+weak = 0
+strength = 0
+exhaust = false
+self_damage = 0

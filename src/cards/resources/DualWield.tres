@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
+card_id = "dual_wield"
+card_name = "Dual Wield"
 cost = 1
-type = 0
-target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+type = 1
+target = 1
+icon = "card_placeholder.png"
+description = "Choose an Attack or Power card in your hand. Add a copy of it into your hand."
+damage = 0
 block = 0
 draw_cards = 0
 energy_gain = 0

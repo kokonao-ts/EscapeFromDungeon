@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
-cost = 1
+card_id = "searing_blow"
+card_name = "Searing Blow"
+cost = 2
 type = 0
 target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+icon = "card_placeholder.png"
+description = "Deal 12 damage. Can be upgraded any number of times."
+damage = 12
 block = 0
 draw_cards = 0
 energy_gain = 0

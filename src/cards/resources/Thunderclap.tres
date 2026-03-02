@@ -4,19 +4,19 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
+card_id = "thunderclap"
+card_name = "Thunderclap"
 cost = 1
 type = 0
-target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+target = 2
+icon = "card_placeholder.png"
+description = "Deal 4 damage and apply 1 Vulnerable to ALL enemies."
+damage = 4
 block = 0
 draw_cards = 0
 energy_gain = 0
 hits = 1
-vulnerable = 0
+vulnerable = 1
 weak = 0
 strength = 0
 exhaust = false

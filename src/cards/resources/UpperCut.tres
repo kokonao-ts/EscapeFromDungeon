@@ -4,20 +4,20 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
-cost = 1
+card_id = "upper_cut"
+card_name = "Upper Cut"
+cost = 2
 type = 0
 target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+icon = "card_placeholder.png"
+description = "Deal 13 damage. Apply 1 Weak. Apply 1 Vulnerable."
+damage = 13
 block = 0
 draw_cards = 0
 energy_gain = 0
 hits = 1
-vulnerable = 0
-weak = 0
+vulnerable = 1
+weak = 1
 strength = 0
 exhaust = false
 self_damage = 0

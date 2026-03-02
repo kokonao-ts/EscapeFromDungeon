@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
+card_id = "exhume"
+card_name = "Exhume"
 cost = 1
-type = 0
-target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+type = 1
+target = 1
+icon = "card_placeholder.png"
+description = "Put a card from your Exhaust pile into your hand. Exhaust."
+damage = 0
 block = 0
 draw_cards = 0
 energy_gain = 0
@@ -19,5 +19,5 @@ hits = 1
 vulnerable = 0
 weak = 0
 strength = 0
-exhaust = false
+exhaust = true
 self_damage = 0

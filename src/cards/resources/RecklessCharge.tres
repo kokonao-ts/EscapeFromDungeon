@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
-cost = 1
+card_id = "reckless_charge"
+card_name = "Reckless Charge"
+cost = 0
 type = 0
 target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+icon = "card_placeholder.png"
+description = "Deal 7 damage. Shuffle a Dazed into your draw pile."
+damage = 7
 block = 0
 draw_cards = 0
 energy_gain = 0

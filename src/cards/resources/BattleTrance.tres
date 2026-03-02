@@ -4,16 +4,16 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
-cost = 1
-type = 0
-target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+card_id = "battle_trance"
+card_name = "Battle Trance"
+cost = 0
+type = 1
+target = 1
+icon = "card_placeholder.png"
+description = "Draw 3 cards. You cannot draw additional cards this turn."
+damage = 0
 block = 0
-draw_cards = 0
+draw_cards = 3
 energy_gain = 0
 hits = 1
 vulnerable = 0

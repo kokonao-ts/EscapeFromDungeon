@@ -4,20 +4,20 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
-cost = 1
-type = 0
-target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+card_id = "bloodletting"
+card_name = "Bloodletting"
+cost = 0
+type = 1
+target = 1
+icon = "card_placeholder.png"
+description = "Lose 3 HP. Gain 2 Energy."
+damage = 0
 block = 0
 draw_cards = 0
-energy_gain = 0
+energy_gain = 2
 hits = 1
 vulnerable = 0
 weak = 0
 strength = 0
 exhaust = false
-self_damage = 0
+self_damage = 3

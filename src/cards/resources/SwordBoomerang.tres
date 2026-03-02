@@ -4,18 +4,18 @@
 
 [resource]
 script = ExtResource("1_x")
-card_id = "strike"
-card_name = "Strike"
+card_id = "sword_boomerang"
+card_name = "Sword Boomerang"
 cost = 1
 type = 0
-target = 0
-icon = "strike.png"
-description = "Deal 6 damage."
-damage = 6
+target = 2
+icon = "card_placeholder.png"
+description = "Deal 3 damage to a random enemy 3 times."
+damage = 3
 block = 0
 draw_cards = 0
 energy_gain = 0
-hits = 1
+hits = 3
 vulnerable = 0
 weak = 0
 strength = 0

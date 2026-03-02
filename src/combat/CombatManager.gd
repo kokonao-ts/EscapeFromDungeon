@@ -47,13 +47,22 @@ func play_card(card: CardResource, target = null):
 	if energy >= card.cost:
 		energy -= card.cost
 
+		# Damage Calculation
+		var base_damage = card.damage
+		if base_damage > 0:
+			base_damage += player.stats.strength
+			if player.stats.weak > 0:
+				base_damage = floor(base_damage * 0.75)
+
 		# Apply effects
-		if card.damage > 0:
-			if target:
-				target.take_damage(card.damage)
-			elif card.target == CardResource.Target.ALL_ENEMIES:
-				for e in enemies:
-					e.take_damage(card.damage)
+		if base_damage > 0:
+			for i in range(card.hits):
+				if target:
+					target.take_damage(base_damage)
+				elif card.target == CardResource.Target.ALL_ENEMIES:
+					for e in enemies:
+						if e.is_alive():
+							e.take_damage(base_damage)
 
 		if card.block > 0:
 			player.add_block(card.block)
@@ -63,21 +72,63 @@ func play_card(card: CardResource, target = null):
 
 		energy += card.energy_gain
 
-		deck_manager.discard_card(card)
+		if card.vulnerable > 0:
+			if target:
+				target.stats.vulnerable += card.vulnerable
+				target.update_ui()
+			elif card.target == CardResource.Target.ALL_ENEMIES:
+				for e in enemies:
+					if e.is_alive():
+						e.stats.vulnerable += card.vulnerable
+						e.update_ui()
+
+		if card.weak > 0:
+			if target:
+				target.stats.weak += card.weak
+				target.update_ui()
+			elif card.target == CardResource.Target.ALL_ENEMIES:
+				for e in enemies:
+					if e.is_alive():
+						e.stats.weak += card.weak
+						e.update_ui()
+
+		if card.strength > 0:
+			player.stats.strength += card.strength
+			player.update_ui()
+
+		if card.self_damage > 0:
+			player.stats.lose_hp(card.self_damage)
+			player.update_ui()
+
+		if card.exhaust:
+			deck_manager.exhaust_card(card)
+		else:
+			deck_manager.discard_card(card)
+
 		check_enemies_alive()
 	else:
 		print("Not enough energy!")
 
 func end_player_turn():
 	if current_state == State.PLAYER_TURN:
+		player.stats.end_turn()
+		player.update_ui()
 		deck_manager.discard_hand()
 		transition_to(State.ENEMY_TURN)
 
 func execute_enemy_turns():
 	for enemy in enemies:
 		if enemy.is_alive():
-			# Simple AI: attack for 6
-			player.take_damage(6)
+			var damage = 6
+			# Simple implementation of status for enemies if they had stats
+			if enemy.stats.strength > 0:
+				damage += enemy.stats.strength
+			if enemy.stats.weak > 0:
+				damage = floor(damage * 0.75)
+
+			player.take_damage(damage)
+			enemy.stats.end_turn()
+			enemy.update_ui()
 
 	if player.stats.hp <= 0:
 		transition_to(State.LOSE)
