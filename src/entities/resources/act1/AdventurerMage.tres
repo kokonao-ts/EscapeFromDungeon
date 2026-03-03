@@ -35,6 +35,7 @@ description = "Magic Shield"
 script = ExtResource("2_b")
 enemy_id = "adventurer_mage"
 enemy_name = "法師"
+character_class = 1
 max_hp = 30
 energy_per_turn = 3
 actions = Array[ExtResource("1_a")]([SubResource("Resource_fireball"), SubResource("Resource_charge"), SubResource("Resource_burst"), SubResource("Resource_shield")])

@@ -36,6 +36,7 @@ description = "Shout"
 script = ExtResource("2_b")
 enemy_id = "adventurer_swordsman"
 enemy_name = "劍士"
+character_class = 0
 max_hp = 40
 energy_per_turn = 3
 actions = Array[ExtResource("1_a")]([SubResource("Resource_cleave"), SubResource("Resource_shield"), SubResource("Resource_stance"), SubResource("Resource_shout")])

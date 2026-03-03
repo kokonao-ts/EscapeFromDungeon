@@ -9,6 +9,7 @@ card_name = "Eruption"
 cost = 2
 type = 0
 character_class = 2
+is_technique = true
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 9 damage. Enter Wrath."

@@ -15,6 +15,7 @@ enum Rarity { COMMON, UNCOMMON, RARE, STARTER }
 @export var target: Target = Target.ENEMY
 @export var icon: String = "card_placeholder.png"
 @export_multiline var description: String = ""
+@export var is_technique: bool = false
 
 @export_group("Effects")
 @export var damage: int = 0

@@ -183,8 +183,10 @@ func play_card(card: CardResource, target = null):
 				if target is Enemy and target.enemy_resource:
 					print("Possessing %s!" % target.enemy_resource.enemy_name)
 					RunManager.possess_enemy(target.enemy_resource)
-					# Reset deck for the new body during combat
-					deck_manager.setup_deck(RunManager.deck)
+					# Swap deck mid-combat
+					var current_body = RunManager.bodies[RunManager.current_body_index]
+					var body_class = current_body.enemy_resource.character_class if current_body.enemy_resource else RunManager.character_class
+					deck_manager.swap_deck_on_possession(current_body.deck, body_class)
 					deck_manager.draw_cards(5)
 					player.update_ui()
 
@@ -199,8 +201,10 @@ func play_card(card: CardResource, target = null):
 						target.take_damage(9999)
 						# Possess the body
 						RunManager.possess_enemy(target.enemy_resource)
-						# Reset deck for the new body during combat
-						deck_manager.setup_deck(RunManager.deck)
+						# Swap deck mid-combat
+						var current_body = RunManager.bodies[RunManager.current_body_index]
+						var body_class = current_body.enemy_resource.character_class if current_body.enemy_resource else RunManager.character_class
+						deck_manager.swap_deck_on_possession(current_body.deck, body_class)
 						deck_manager.draw_cards(5)
 						player.update_ui()
 				else:
@@ -226,7 +230,9 @@ func end_player_turn():
 			if is_goblin:
 				if RunManager.revert_to_core():
 					print("Body died! Reverting to core...")
-					deck_manager.setup_deck(RunManager.deck)
+					var current_body = RunManager.bodies[RunManager.current_body_index]
+					var body_class = current_body.enemy_resource.character_class if current_body.enemy_resource else RunManager.character_class
+					deck_manager.swap_deck_on_possession(current_body.deck, body_class)
 					deck_manager.draw_cards(5)
 					player.update_ui()
 					transition_to(State.ENEMY_TURN)
@@ -275,7 +281,9 @@ func execute_enemy_turns():
 		if is_goblin:
 			if RunManager.revert_to_core():
 				print("Body died! Reverting to core...")
-				deck_manager.setup_deck(RunManager.deck)
+				var current_body = RunManager.bodies[RunManager.current_body_index]
+				var body_class = current_body.enemy_resource.character_class if current_body.enemy_resource else RunManager.character_class
+				deck_manager.swap_deck_on_possession(current_body.deck, body_class)
 				deck_manager.draw_cards(5)
 				player.update_ui()
 				transition_to(State.START_TURN)

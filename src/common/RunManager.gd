@@ -4,6 +4,7 @@ enum CharacterClass { IRONCLAD, SILENT, WATCHER, NEUTRAL, GOBLIN_ASSASSIN, GOBLI
 
 var player_stats: Stats
 var deck: Array[CardResource] = []
+var owned_techniques: Array[CardResource] = []
 var gold: int = 0
 var character_class: CharacterClass = CharacterClass.IRONCLAD
 
@@ -31,6 +32,7 @@ func initialize_run(p_class: CharacterClass = CharacterClass.IRONCLAD):
 
 	bodies.clear()
 	fixed_cards.clear()
+	owned_techniques.clear()
 	current_body_index = 0
 
 	match character_class:
@@ -60,11 +62,8 @@ func initialize_run(p_class: CharacterClass = CharacterClass.IRONCLAD):
 			var strike = load("res://src/cards/resources/Strike.tres")
 			var defend = load("res://src/cards/resources/Defend.tres")
 
-			fixed_cards.assign([execute_knife])
-			# One Execute Knife from fixed_cards, 14 from start_deck = 15 total
+			fixed_cards.assign([execute_knife, goblin_strike, goblin_rally])
 			var start_deck: Array[CardResource] = [
-				goblin_strike, goblin_strike, goblin_strike, goblin_strike,
-				goblin_rally, goblin_rally, goblin_rally, goblin_rally,
 				strike, strike, strike,
 				defend, defend, defend
 			]
@@ -85,14 +84,11 @@ func initialize_run(p_class: CharacterClass = CharacterClass.IRONCLAD):
 			var goblin_strike = load("res://src/cards/resources/GoblinStrike.tres")
 			var goblin_rally = load("res://src/cards/resources/GoblinRally.tres")
 
-			fixed_cards.assign([body_swap])
-			# One Body Swap from fixed_cards, 14 from start_deck = 15 total
+			fixed_cards.assign([body_swap, goblin_strike, goblin_rally])
 			var start_deck: Array[CardResource] = [
 				fireball, fireball, fireball,
 				frostbolt, frostbolt, frostbolt,
-				mana_barrier, mana_barrier, mana_barrier,
-				goblin_strike, goblin_strike,
-				goblin_rally, goblin_rally, goblin_rally
+				mana_barrier, mana_barrier, mana_barrier
 			]
 			deck.assign(start_deck)
 
@@ -130,7 +126,6 @@ func generate_act(act_num: int):
 	var normal_enemies = []
 	var bosses = []
 
-	# Try to load from new structure, fallback to old if not found
 	var dir = DirAccess.open(pool_path)
 	if dir:
 		dir.list_dir_begin()
@@ -149,7 +144,6 @@ func generate_act(act_num: int):
 				bosses.append(load(boss_path + file_name))
 			file_name = dir.get_next()
 
-	# Fallback to defaults if pools are empty
 	if normal_enemies.is_empty():
 		normal_enemies = [
 			load("res://src/entities/resources/JawWorm.tres"),
@@ -159,13 +153,11 @@ func generate_act(act_num: int):
 	if bosses.is_empty():
 		bosses = [normal_enemies[0]]
 
-	# Basic linear act for now: 5 combats and a boss
 	for i in range(5):
 		var node = MapNode.new()
 		node.type = MapNode.Type.COMBAT
 		node.position = Vector2(0, i * 100)
 
-		# For Act 3, maybe have multiple enemies?
 		if act_num == 3 and randf() > 0.5:
 			var ens = []
 			ens.append(normal_enemies[randi() % normal_enemies.size()])
@@ -180,7 +172,6 @@ func generate_act(act_num: int):
 	boss.type = MapNode.Type.BOSS
 	boss.position = Vector2(0, 500)
 
-	# If final act (3 or hidden 4), use specific bosses
 	if act_num == 4:
 		var naraku = load("res://src/entities/resources/boss/NarakuAbyss.tres")
 		boss.data["enemy_resource"] = naraku if naraku else bosses[0]
@@ -200,12 +191,10 @@ func get_card_pool() -> Array[CardResource]:
 			if file_name.ends_with(".tres"):
 				var card = load(all_cards_path + file_name) as CardResource
 				if card:
-					# Filter out STARTER cards
 					if card.rarity == CardResource.Rarity.STARTER:
 						file_name = dir.get_next()
 						continue
 
-					# 3 is NEUTRAL, 6 is GOBLIN_SHARED
 					var is_goblin = character_class == CharacterClass.GOBLIN_ASSASSIN or character_class == CharacterClass.GOBLIN_MAGE
 					if card.character_class == character_class or card.character_class == 3:
 						pool.append(card)
@@ -222,6 +211,15 @@ func get_card_pool_by_rarity(rarity: CardResource.Rarity) -> Array[CardResource]
 			filtered.append(card)
 	return filtered
 
+func add_card_to_deck(card: CardResource):
+	if card.is_technique:
+		owned_techniques.append(card)
+	else:
+		deck.append(card)
+
+	# After adding, rebuild current deck
+	switch_body(current_body_index)
+
 func possess_enemy(enemy_res: EnemyResource):
 	var new_body = Body.new()
 	new_body.name = enemy_res.enemy_name
@@ -229,7 +227,6 @@ func possess_enemy(enemy_res: EnemyResource):
 	new_body.hp = enemy_res.max_hp
 	new_body.enemy_resource = enemy_res
 
-	# Generate a deck for the enemy
 	var enemy_deck: Array[CardResource] = []
 	for action in enemy_res.actions:
 		var card = CardResource.new()
@@ -245,7 +242,6 @@ func possess_enemy(enemy_res: EnemyResource):
 		card.icon = "card_placeholder.png"
 		enemy_deck.append(card)
 
-	# If no actions, give some default strikes
 	if enemy_deck.is_empty():
 		var strike = load("res://src/cards/resources/Strike.tres").duplicate()
 		strike.character_class = character_class
@@ -254,15 +250,12 @@ func possess_enemy(enemy_res: EnemyResource):
 
 	new_body.deck = enemy_deck
 	bodies.append(new_body)
-
-	# Automatically switch to the new body
 	switch_body(bodies.size() - 1)
 
 func switch_body(index: int):
 	if index < 0 or index >= bodies.size():
 		return
 
-	# Save current HP if we are in a run and current index is still valid
 	if is_run_active and current_body_index >= 0 and current_body_index < bodies.size():
 		bodies[current_body_index].hp = player_stats.hp
 
@@ -272,23 +265,25 @@ func switch_body(index: int):
 	player_stats.max_hp = body.max_hp
 	player_stats.hp = body.hp
 
-	# Update deck: fixed cards + body specific deck
 	deck.clear()
 	deck.assign(fixed_cards)
 	for c in body.deck:
 		deck.append(c)
 
-	# Notify UI if needed, but usually this happens between combats or via special card
-	# If it happens DURING combat, we need to tell CombatManager
+	var body_class = body.enemy_resource.character_class if body.enemy_resource else character_class
+
+	for tech in owned_techniques:
+		var matches = tech.character_class == body_class or \
+					  tech.character_class == 3 or \
+					  tech.character_class == 6
+		if matches:
+			deck.append(tech)
 
 func revert_to_core():
 	if current_body_index == 0:
-		# Core died, game over
 		return false
 
-	# Current body is dead
 	bodies.remove_at(current_body_index)
-	# Set to invalid index so switch_body doesn't try to save HP to the shifted array
 	current_body_index = -1
 	switch_body(0)
 	return true

@@ -133,7 +133,7 @@ func show_rewards():
 	reward_ui.tree_exited.connect(_on_reward_finished)
 
 func _on_reward_card_selected(card: CardResource):
-	RunManager.deck.append(card)
+	RunManager.add_card_to_deck(card)
 	print("Added %s to deck" % card.card_name)
 
 func _on_reward_finished():

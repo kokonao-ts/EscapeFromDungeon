@@ -35,6 +35,7 @@ description = "Curse"
 script = ExtResource("2_b")
 enemy_id = "adventurer_priest"
 enemy_name = "牧師"
+character_class = 2
 max_hp = 32
 energy_per_turn = 3
 actions = Array[ExtResource("1_a")]([SubResource("Resource_heal"), SubResource("Resource_light"), SubResource("Resource_protect"), SubResource("Resource_curse")])
