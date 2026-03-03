@@ -4,10 +4,12 @@ class_name CardResource
 enum Type { ATTACK, SKILL, POWER }
 enum Target { ENEMY, SELF, ALL_ENEMIES }
 enum CharacterClass { IRONCLAD, SILENT, WATCHER, NEUTRAL, GOBLIN_ASSASSIN, GOBLIN_MAGE, GOBLIN_SHARED }
+enum Rarity { COMMON, UNCOMMON, RARE, STARTER }
 
 @export var card_id: String = ""
 @export var card_name: String = "Card"
 @export var character_class: CharacterClass = CharacterClass.IRONCLAD
+@export var rarity: Rarity = Rarity.COMMON
 @export var cost: int = 1
 @export var type: Type = Type.ATTACK
 @export var target: Target = Target.ENEMY

@@ -199,15 +199,28 @@ func get_card_pool() -> Array[CardResource]:
 		while file_name != "":
 			if file_name.ends_with(".tres"):
 				var card = load(all_cards_path + file_name) as CardResource
-				# 3 is NEUTRAL, 6 is GOBLIN_SHARED
-				var is_goblin = character_class == CharacterClass.GOBLIN_ASSASSIN or character_class == CharacterClass.GOBLIN_MAGE
 				if card:
+					# Filter out STARTER cards
+					if card.rarity == CardResource.Rarity.STARTER:
+						file_name = dir.get_next()
+						continue
+
+					# 3 is NEUTRAL, 6 is GOBLIN_SHARED
+					var is_goblin = character_class == CharacterClass.GOBLIN_ASSASSIN or character_class == CharacterClass.GOBLIN_MAGE
 					if card.character_class == character_class or card.character_class == 3:
 						pool.append(card)
 					elif is_goblin and card.character_class == 6:
 						pool.append(card)
 			file_name = dir.get_next()
 	return pool
+
+func get_card_pool_by_rarity(rarity: CardResource.Rarity) -> Array[CardResource]:
+	var pool = get_card_pool()
+	var filtered: Array[CardResource] = []
+	for card in pool:
+		if card.rarity == rarity:
+			filtered.append(card)
+	return filtered
 
 func possess_enemy(enemy_res: EnemyResource):
 	var new_body = Body.new()
