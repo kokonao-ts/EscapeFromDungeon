@@ -315,7 +315,10 @@ func _rebuild_deck():
 			continue
 
 		# Filter techniques by body class
+		var is_goblin_body = body.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or body.character_class == CardResource.CharacterClass.GOBLIN_MAGE
 		if card.character_class == body.character_class or card.character_class == CardResource.CharacterClass.NEUTRAL:
+			deck.append(card)
+		elif is_goblin_body and card.character_class == CardResource.CharacterClass.GOBLIN_SHARED:
 			deck.append(card)
 
 	for c in body.deck:
