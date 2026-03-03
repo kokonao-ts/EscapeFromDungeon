@@ -7,6 +7,7 @@ script = ExtResource("1_script")
 card_id = "goblin_rally"
 card_name = "哥布林集結"
 character_class = 6
+rarity = 3
 cost = 1
 type = 1
 target = 1

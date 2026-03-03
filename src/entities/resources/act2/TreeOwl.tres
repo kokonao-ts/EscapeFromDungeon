@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_blade"]
+script = ExtResource("1_a")
+type = 0
+damage = 7
+cost = 1
+description = "Wood Feather Blade"
+
+[sub_resource type="Resource" id="Resource_disguise"]
+script = ExtResource("1_a")
+type = 2
+evasion = 1
+cost = 1
+description = "Nature Disguise"
+
+[sub_resource type="Resource" id="Resource_storm"]
+script = ExtResource("1_a")
+type = 0
+damage = 10
+cost = 2
+description = "Leaf Storm"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "tree_owl"
+enemy_name = "樹梟"
+max_hp = 36
+energy_per_turn = 3
+actions = Array[ExtResource("1_a")]([SubResource("Resource_blade"), SubResource("Resource_disguise"), SubResource("Resource_storm")])
+action_weights = [0.4, 0.3, 0.3]
+# Leaf storm should be ALL_ENEMIES if card system supports it, for enemy it targets player

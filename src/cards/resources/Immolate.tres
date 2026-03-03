@@ -9,6 +9,7 @@ card_name = "Immolate"
 cost = 2
 type = 0
 character_class = 0
+rarity = 2
 target = 2
 icon = "card_placeholder.png"
 description = "Deal 21 damage to ALL enemies. Add a Burn into your discard pile."

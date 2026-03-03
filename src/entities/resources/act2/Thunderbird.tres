@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_strike"]
+script = ExtResource("1_a")
+type = 0
+damage = 14
+cost = 2
+description = "Lightning Strike"
+
+[sub_resource type="Resource" id="Resource_surround"]
+script = ExtResource("1_a")
+type = 3
+electrified = 2
+cost = 1
+description = "Current Surround"
+
+[sub_resource type="Resource" id="Resource_release"]
+script = ExtResource("1_a")
+type = 2
+strength = 4
+cost = 1
+description = "Sudden Release"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "thunderbird"
+enemy_name = "雷鳥"
+max_hp = 38
+energy_per_turn = 3
+actions = Array[ExtResource("1_a")]([SubResource("Resource_strike"), SubResource("Resource_surround"), SubResource("Resource_release")])
+action_weights = [0.4, 0.3, 0.3]

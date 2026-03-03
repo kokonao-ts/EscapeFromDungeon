@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_resonance"]
+script = ExtResource("1_a")
+type = 3
+damage = 18
+burn = 1
+slow = 1
+electrified = 1
+cost = 3
+description = "Three-System Resonance"
+
+[sub_resource type="Resource" id="Resource_cycle"]
+script = ExtResource("1_a")
+type = 0
+damage = 10
+cost = 1
+description = "Elemental Cycle"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "elemental_sorcerer"
+enemy_name = "元素術士"
+max_hp = 70
+energy_per_turn = 4
+actions = Array[ExtResource("1_a")]([SubResource("Resource_resonance"), SubResource("Resource_cycle")])
+action_weights = [0.3, 0.7]

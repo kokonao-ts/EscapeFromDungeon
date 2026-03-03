@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_cleave"]
+script = ExtResource("1_a")
+type = 0
+damage = 8
+cost = 1
+description = "Cleave"
+
+[sub_resource type="Resource" id="Resource_shield"]
+script = ExtResource("1_a")
+type = 3
+damage = 4
+stun = 1
+cost = 1
+description = "Shield Bash"
+
+[sub_resource type="Resource" id="Resource_stance"]
+script = ExtResource("1_a")
+type = 1
+block = 12
+cost = 1
+description = "Defensive Stance"
+
+[sub_resource type="Resource" id="Resource_shout"]
+script = ExtResource("1_a")
+type = 2
+strength = 2
+cost = 2
+description = "Shout"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "adventurer_swordsman"
+enemy_name = "劍士"
+max_hp = 40
+energy_per_turn = 3
+actions = Array[ExtResource("1_a")]([SubResource("Resource_cleave"), SubResource("Resource_shield"), SubResource("Resource_stance"), SubResource("Resource_shout")])
+action_weights = [0.3, 0.3, 0.2, 0.2]

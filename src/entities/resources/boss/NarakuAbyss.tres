@@ -1,0 +1,53 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_judgment"]
+script = ExtResource("1_a")
+type = 0
+damage = 45
+cost = 3
+description = "Abyssal Judgment"
+
+[sub_resource type="Resource" id="Resource_dark_field"]
+script = ExtResource("1_a")
+type = 3
+vulnerable = 2
+damage = 30
+cost = 3
+description = "Absolute Dark Field"
+
+[sub_resource type="Resource" id="Resource_storm"]
+script = ExtResource("1_a")
+type = 0
+damage = 18
+hits = 2
+cost = 3
+description = "Dark Matter Storm"
+
+[sub_resource type="Resource" id="Resource_naraku"]
+script = ExtResource("1_a")
+type = 3
+burn = 1
+poison = 1
+weak = 1
+slow = 1
+cost = 2
+description = "Endless Naraku"
+
+[sub_resource type="Resource" id="Resource_hand"]
+script = ExtResource("1_a")
+type = 1
+block = 50
+cost = 1
+description = "Immortal Palm"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "naraku_abyss_form"
+enemy_name = "Naraku Lord (Abyss Form)"
+max_hp = 500
+energy_per_turn = 6
+actions = Array[ExtResource("1_a")]([SubResource("Resource_judgment"), SubResource("Resource_dark_field"), SubResource("Resource_storm"), SubResource("Resource_naraku"), SubResource("Resource_hand")])
+action_weights = [0.2, 0.2, 0.2, 0.2, 0.2]

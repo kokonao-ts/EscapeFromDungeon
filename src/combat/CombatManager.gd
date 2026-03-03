@@ -36,9 +36,27 @@ func transition_to(new_state: State):
 				transition_to(State.ENEMY_TURN)
 				return
 
+			# Stunned skipping
+			if player.stats.stunned > 0:
+				player.stats.stunned -= 1
+				player.update_ui()
+				print("Player stunned, skipping turn!")
+				transition_to(State.ENEMY_TURN)
+				return
+
 			player.stats.reset_block()
-			energy = max_energy
-			deck_manager.draw_cards(5)
+
+			var actual_max_energy = max_energy
+			if player.stats.slow > 0:
+				actual_max_energy = max(0, actual_max_energy - player.stats.slow)
+
+			energy = actual_max_energy
+
+			var draw_count = 5
+			if player.stats.draw_reduction > 0:
+				draw_count = max(0, draw_count - player.stats.draw_reduction)
+
+			deck_manager.draw_cards(draw_count)
 			transition_to(State.PLAYER_TURN)
 		State.PLAYER_TURN:
 			pass # Wait for player input
@@ -52,6 +70,10 @@ func transition_to(new_state: State):
 			combat_finished.emit(false)
 
 func play_card(card: CardResource, target = null):
+	if card.type == CardResource.Type.ATTACK and player.stats.attack_locked > 0:
+		print("Attacks are locked!")
+		return
+
 	var actual_cost = card.cost
 	if card.free_if_chilled:
 		var has_chill = false
@@ -81,10 +103,20 @@ func play_card(card: CardResource, target = null):
 			for i in range(card.hits):
 				if target:
 					target.take_damage(base_damage)
+					# Thorns damage back to player
+					if target.stats.thorns > 0:
+						player.stats.lose_hp(target.stats.thorns)
+					# Electrified damage back to player
+					if target.stats.electrified > 0:
+						player.stats.lose_hp(target.stats.electrified)
 				elif card.target == CardResource.Target.ALL_ENEMIES:
 					for e in enemies:
 						if e.is_alive():
 							e.take_damage(base_damage)
+							if e.stats.thorns > 0:
+								player.stats.lose_hp(e.stats.thorns)
+							if e.stats.electrified > 0:
+								player.stats.lose_hp(e.stats.electrified)
 
 		if card.block > 0:
 			player.add_block(card.block)
@@ -182,6 +214,7 @@ func end_player_turn():
 	if current_state == State.PLAYER_TURN:
 		# Process Burn at end of player turn
 		_process_burn(player)
+		_process_poison(player)
 
 		player.stats.end_turn()
 		player.update_ui()
@@ -213,6 +246,13 @@ func execute_enemy_turns():
 				print("Enemy frozen, skipping turn!")
 				continue
 
+			# Skip if stunned
+			if enemy.stats.stunned > 0:
+				enemy.stats.stunned -= 1
+				enemy.update_ui()
+				print("Enemy stunned, skipping turn!")
+				continue
+
 			if enemy is Enemy:
 				enemy.execute_turn(self, player)
 			else:
@@ -226,6 +266,7 @@ func execute_enemy_turns():
 				enemy.stats.end_turn()
 
 			_process_burn(enemy)
+			_process_poison(enemy)
 			enemy.update_ui()
 
 	if player.stats.hp <= 0:
@@ -250,6 +291,12 @@ func _process_burn(entity):
 		entity.stats.burn = max(0, entity.stats.burn - 10)
 		entity.update_ui()
 
+func _process_poison(entity):
+	if entity.stats.poison > 0:
+		entity.stats.lose_hp(entity.stats.poison)
+		entity.stats.poison = max(0, entity.stats.poison - 1)
+		entity.update_ui()
+
 func apply_chill(entity, stacks: int):
 	entity.stats.chill += stacks
 	if entity.stats.chill >= 10:
@@ -266,3 +313,21 @@ func check_enemies_alive():
 
 	if all_dead:
 		transition_to(State.WIN)
+
+func spawn_enemy(enemy_resource: EnemyResource):
+	var enemy_scene = load("res://src/entities/Enemy.tscn")
+	if not enemy_scene:
+		# Fallback if scene is not found (assuming it exists or can be created)
+		print("Enemy scene not found, cannot spawn!")
+		return
+
+	var new_enemy = enemy_scene.instantiate()
+	var enemies_container = get_tree().root.find_child("Enemies", true, false)
+	if enemies_container:
+		enemies_container.add_child(new_enemy)
+		new_enemy.setup(enemy_resource)
+		enemies.append(new_enemy)
+		# Position it randomly or based on existing enemies
+		new_enemy.position = Vector2(800 + randf_range(-100, 100), 400 + randf_range(-100, 100))
+	else:
+		print("Enemies container not found!")

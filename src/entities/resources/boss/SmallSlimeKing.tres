@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_torrent"]
+script = ExtResource("1_a")
+type = 0
+damage = 8
+weak = 1
+cost = 2
+description = "Small Mucus Torrent"
+
+[sub_resource type="Resource" id="Resource_jump"]
+script = ExtResource("1_a")
+type = 0
+damage = 12
+cost = 2
+description = "Small Jump"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "small_slime_king"
+enemy_name = "Small Slime King"
+max_hp = 75
+energy_per_turn = 2
+actions = Array[ExtResource("1_a")]([SubResource("Resource_torrent"), SubResource("Resource_jump")])
+action_weights = [0.5, 0.5]

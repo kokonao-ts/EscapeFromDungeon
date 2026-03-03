@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_bite"]
+script = ExtResource("1_a")
+type = 0
+damage = 10
+hits = 2
+cost = 2
+description = "Double Flame Bite"
+
+[sub_resource type="Resource" id="Resource_heat"]
+script = ExtResource("1_a")
+type = 3
+draw_reduction = 1
+cost = 1
+description = "Heatwave"
+
+[sub_resource type="Resource" id="Resource_claw"]
+script = ExtResource("1_a")
+type = 0
+damage = 6
+burn = 1
+cost = 1
+description = "Fire Claw"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "hellhound"
+enemy_name = "地獄犬"
+max_hp = 70
+energy_per_turn = 4
+actions = Array[ExtResource("1_a")]([SubResource("Resource_bite"), SubResource("Resource_heat"), SubResource("Resource_claw")])
+action_weights = [0.4, 0.3, 0.3]

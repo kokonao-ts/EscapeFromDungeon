@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/entities/EnemyAction.gd" id="1_a"]
+[ext_resource type="Script" path="res://src/entities/EnemyResource.gd" id="2_b"]
+
+[sub_resource type="Resource" id="Resource_jump_slash"]
+script = ExtResource("1_a")
+type = 0
+damage = 6
+cost = 1
+description = "Jump Slash"
+
+[sub_resource type="Resource" id="Resource_sprint"]
+script = ExtResource("1_a")
+type = 2
+evasion = 5
+cost = 1
+description = "Sprint"
+
+[sub_resource type="Resource" id="Resource_dash"]
+script = ExtResource("1_a")
+type = 2
+strength = 2
+cost = 0
+description = "Dash"
+
+[sub_resource type="Resource" id="Resource_curl_up"]
+script = ExtResource("1_a")
+type = 1
+block = 8
+cost = 1
+description = "Curl Up"
+
+[resource]
+script = ExtResource("2_b")
+enemy_id = "forest_rabbit"
+enemy_name = "Forest Rabbit"
+max_hp = 20
+energy_per_turn = 2
+actions = Array[ExtResource("1_a")]([SubResource("Resource_jump_slash"), SubResource("Resource_sprint"), SubResource("Resource_dash"), SubResource("Resource_curl_up")])
+action_weights = [0.4, 0.2, 0.2, 0.2]
