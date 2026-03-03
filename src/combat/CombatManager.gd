@@ -183,9 +183,11 @@ func play_card(card: CardResource, target = null):
 				if target is Enemy and target.enemy_resource:
 					print("Possessing %s!" % target.enemy_resource.enemy_name)
 					RunManager.possess_enemy(target.enemy_resource)
-					# Reset deck for the new body during combat
-					deck_manager.setup_deck(RunManager.deck)
-					deck_manager.draw_cards(5)
+					# Handle body swap logic: filter hand, discard to draw, shuffle
+					deck_manager.handle_body_swap(RunManager.deck)
+					# Replenish hand if filtered cards left it small
+					if deck_manager.hand.size() < 5:
+						deck_manager.draw_cards(5 - deck_manager.hand.size())
 					player.update_ui()
 
 		# Body Swap mechanic for Goblin Mage
@@ -199,9 +201,11 @@ func play_card(card: CardResource, target = null):
 						target.take_damage(9999)
 						# Possess the body
 						RunManager.possess_enemy(target.enemy_resource)
-						# Reset deck for the new body during combat
-						deck_manager.setup_deck(RunManager.deck)
-						deck_manager.draw_cards(5)
+						# Handle body swap logic: filter hand, discard to draw, shuffle
+						deck_manager.handle_body_swap(RunManager.deck)
+						# Replenish hand
+						if deck_manager.hand.size() < 5:
+							deck_manager.draw_cards(5 - deck_manager.hand.size())
 						player.update_ui()
 				else:
 					print("HP too high for Body Swap!")
@@ -226,8 +230,7 @@ func end_player_turn():
 			if is_goblin:
 				if RunManager.revert_to_core():
 					print("Body died! Reverting to core...")
-					deck_manager.setup_deck(RunManager.deck)
-					deck_manager.draw_cards(5)
+					deck_manager.handle_body_swap(RunManager.deck)
 					player.update_ui()
 					transition_to(State.ENEMY_TURN)
 					return
@@ -275,8 +278,7 @@ func execute_enemy_turns():
 		if is_goblin:
 			if RunManager.revert_to_core():
 				print("Body died! Reverting to core...")
-				deck_manager.setup_deck(RunManager.deck)
-				deck_manager.draw_cards(5)
+				deck_manager.handle_body_swap(RunManager.deck)
 				player.update_ui()
 				transition_to(State.START_TURN)
 				return
