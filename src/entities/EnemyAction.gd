@@ -1,5 +1,5 @@
-extends Resource
 class_name EnemyAction
+extends Resource
 
 enum Type { ATTACK, DEFEND, BUFF, DEBUFF, STUN, HEAL, SUMMON, SPLIT, SPECIAL }
 

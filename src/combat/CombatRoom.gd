@@ -1,16 +1,16 @@
 extends Node2D
 
-@onready var combat_manager = $CombatManager
-@onready var hand_ui = $CanvasLayer/HandUI
-@onready var energy_label = $CanvasLayer/UI/EnergyLabel
-@onready var player = $Player
-@onready var enemies_container = $Enemies
-
 var card_ui_scene = preload("res://src/ui/CardUI.tscn")
 var battle_reward_scene = preload("res://src/ui/BattleReward.tscn")
 var enemy_scene = preload("res://src/entities/Enemy.tscn")
 
 var selected_enemy: Enemy = null
+
+@onready var combat_manager = $CombatManager
+@onready var hand_ui = $CanvasLayer/HandUI
+@onready var energy_label = $CanvasLayer/UI/EnergyLabel
+@onready var player = $Player
+@onready var enemies_container = $Enemies
 
 func _ready():
 	# Use data from RunManager

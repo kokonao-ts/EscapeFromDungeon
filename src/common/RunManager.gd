@@ -1,10 +1,5 @@
 extends Node
 
-var player_stats: Stats
-var deck: Array[CardResource] = []
-var gold: int = 0
-var character_class: CardResource.CharacterClass = CardResource.CharacterClass.IRONCLAD
-
 # Body system for Goblin Assassin
 class Body:
 	var name: String
@@ -13,6 +8,11 @@ class Body:
 	var character_class: CardResource.CharacterClass = CardResource.CharacterClass.NEUTRAL
 	var deck: Array[CardResource] = []
 	var enemy_resource: EnemyResource
+
+var player_stats: Stats
+var deck: Array[CardResource] = []
+var gold: int = 0
+var character_class: CardResource.CharacterClass = CardResource.CharacterClass.IRONCLAD
 
 var bodies: Array[Body] = []
 var current_body_index: int = 0
@@ -32,13 +32,21 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 	fixed_cards.clear()
 	current_body_index = 0
 
+	var strike_res = "res://src/cards/resources/Strike.tres"
+	var defend_res = "res://src/cards/resources/Defend.tres"
+	var goblin_strike_res = "res://src/cards/resources/GoblinStrike.tres"
+	var goblin_rally_res = "res://src/cards/resources/GoblinRally.tres"
+
 	match character_class:
 		CardResource.CharacterClass.IRONCLAD:
 			player_stats.max_hp = 80
-			var strike = load("res://src/cards/resources/Strike.tres")
-			var defend = load("res://src/cards/resources/Defend.tres")
+			var strike = load(strike_res)
+			var defend = load(defend_res)
 			var bash = load("res://src/cards/resources/Bash.tres")
-			var start_deck: Array[CardResource] = [strike, strike, strike, strike, strike, defend, defend, defend, defend, bash]
+			var start_deck: Array[CardResource] = [
+				strike, strike, strike, strike, strike,
+				defend, defend, defend, defend, bash
+			]
 
 			var core_body = Body.new()
 			core_body.name = "鐵衛士"
@@ -52,7 +60,10 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 			var strike = load("res://src/cards/resources/SilentStrike.tres")
 			var defend = load("res://src/cards/resources/SilentDefend.tres")
 			var special = load("res://src/cards/resources/SilentSpecial.tres")
-			var start_deck: Array[CardResource] = [strike, strike, strike, strike, strike, defend, defend, defend, defend, defend, special]
+			var start_deck: Array[CardResource] = [
+				strike, strike, strike, strike, strike,
+				defend, defend, defend, defend, defend, special
+			]
 
 			var core_body = Body.new()
 			core_body.name = "寂靜者"
@@ -66,7 +77,10 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 			var strike = load("res://src/cards/resources/WatcherStrike.tres")
 			var defend = load("res://src/cards/resources/WatcherDefend.tres")
 			var special = load("res://src/cards/resources/WatcherSpecial.tres")
-			var start_deck: Array[CardResource] = [strike, strike, strike, strike, defend, defend, defend, defend, special]
+			var start_deck: Array[CardResource] = [
+				strike, strike, strike, strike,
+				defend, defend, defend, defend, special
+			]
 
 			var core_body = Body.new()
 			core_body.name = "觀者"
@@ -78,10 +92,10 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 		CardResource.CharacterClass.GOBLIN_ASSASSIN:
 			player_stats.max_hp = 50
 			var execute_knife = load("res://src/cards/resources/ExecuteKnife.tres").duplicate()
-			var goblin_strike = load("res://src/cards/resources/GoblinStrike.tres").duplicate()
-			var goblin_rally = load("res://src/cards/resources/GoblinRally.tres").duplicate()
-			var strike = load("res://src/cards/resources/Strike.tres")
-			var defend = load("res://src/cards/resources/Defend.tres")
+			var goblin_strike = load(goblin_strike_res).duplicate()
+			var goblin_rally = load(goblin_rally_res).duplicate()
+			var strike = load(strike_res)
+			var defend = load(defend_res)
 
 			# Mark special cards
 			execute_knife.is_goblin_special = true
@@ -111,8 +125,8 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 			var fireball = load("res://src/cards/resources/Fireball.tres")
 			var frostbolt = load("res://src/cards/resources/Frostbolt.tres")
 			var mana_barrier = load("res://src/cards/resources/ManaBarrier.tres")
-			var goblin_strike = load("res://src/cards/resources/GoblinStrike.tres").duplicate()
-			var goblin_rally = load("res://src/cards/resources/GoblinRally.tres").duplicate()
+			var goblin_strike = load(goblin_strike_res).duplicate()
+			var goblin_rally = load(goblin_rally_res).duplicate()
 
 			# Mark special cards
 			body_swap.is_goblin_special = true
@@ -240,11 +254,17 @@ func get_card_pool() -> Array[CardResource]:
 						file_name = dir.get_next()
 						continue
 
-					# 3 is NEUTRAL, 6 is GOBLIN_SHARED
-					var is_goblin = character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or character_class == CardResource.CharacterClass.GOBLIN_MAGE
-					if card.character_class == character_class or card.character_class == 3:
+					# Filter by class
+					var is_goblin = character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or \
+									character_class == CardResource.CharacterClass.GOBLIN_MAGE
+
+					var is_neutral = card.character_class == CardResource.CharacterClass.NEUTRAL
+					var is_matching = card.character_class == character_class
+					var is_goblin_shared = card.character_class == CardResource.CharacterClass.GOBLIN_SHARED
+
+					if is_matching or is_neutral:
 						pool.append(card)
-					elif is_goblin and card.character_class == 6:
+					elif is_goblin and is_goblin_shared:
 						pool.append(card)
 			file_name = dir.get_next()
 	return pool
@@ -309,16 +329,22 @@ func _rebuild_deck():
 			deck.append(card)
 			continue
 
-		# Keep non-technique fixed cards (if any, although mostly they should be techniques or specials)
+		# Keep non-technique fixed cards
 		if not card.is_technique:
 			deck.append(card)
 			continue
 
 		# Filter techniques by body class
-		var is_goblin_body = body.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or body.character_class == CardResource.CharacterClass.GOBLIN_MAGE
-		if card.character_class == body.character_class or card.character_class == CardResource.CharacterClass.NEUTRAL:
+		var is_goblin_body = body.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or \
+							body.character_class == CardResource.CharacterClass.GOBLIN_MAGE
+
+		var is_neutral = card.character_class == CardResource.CharacterClass.NEUTRAL
+		var is_matching = card.character_class == body.character_class
+		var is_goblin_shared = card.character_class == CardResource.CharacterClass.GOBLIN_SHARED
+
+		if is_matching or is_neutral:
 			deck.append(card)
-		elif is_goblin_body and card.character_class == CardResource.CharacterClass.GOBLIN_SHARED:
+		elif is_goblin_body and is_goblin_shared:
 			deck.append(card)
 
 	for c in body.deck:
@@ -340,9 +366,6 @@ func switch_body(index: int):
 
 	_rebuild_deck()
 
-	# Notify UI if needed, but usually this happens between combats or via special card
-	# If it happens DURING combat, we need to tell CombatManager
-
 func add_card_to_run(card: CardResource):
 	if card.is_technique or card.is_goblin_special:
 		fixed_cards.append(card)
@@ -359,7 +382,7 @@ func revert_to_core():
 
 	# Current body is dead
 	bodies.remove_at(current_body_index)
-	# Set to invalid index so switch_body doesn't try to save HP to the shifted array
+	# Set to invalid index so switch_body doesn't try to save HP
 	current_body_index = -1
 	switch_body(0)
 	return true

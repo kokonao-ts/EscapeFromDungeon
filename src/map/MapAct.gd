@@ -1,5 +1,5 @@
-extends Resource
 class_name MapAct
+extends Resource
 
 @export var nodes: Array[MapNode] = []
 @export var act_number: int = 1

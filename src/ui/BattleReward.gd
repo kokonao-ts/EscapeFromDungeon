@@ -2,8 +2,9 @@ extends Control
 
 signal card_selected(card: CardResource)
 
-@onready var card_container = $VBoxContainer/CardContainer
 var card_ui_scene = preload("res://src/ui/CardUI.tscn")
+
+@onready var card_container = $VBoxContainer/CardContainer
 
 func _ready():
 	generate_rewards()
@@ -30,7 +31,8 @@ func generate_rewards():
 
 	# 2. Remaining 2 cards based on rarity probabilities
 	var remaining_count = 3 - choices.size()
-	var is_elite = current_node.type == MapNode.Type.ELITE or current_node.type == MapNode.Type.BOSS
+	var is_elite = current_node.type == MapNode.Type.ELITE \
+					or current_node.type == MapNode.Type.BOSS
 
 	for i in range(remaining_count):
 		var card = _get_random_card_by_rarity(is_elite)
@@ -62,20 +64,20 @@ func _get_enemy_cards(enemy_res: EnemyResource) -> Array[CardResource]:
 	return cards
 
 func _get_random_card_by_rarity(must_be_rare: bool) -> CardResource:
-	if must_be_rare:
+	var final_must_be_rare = must_be_rare
+	if final_must_be_rare:
 		var rare_pool = RunManager.get_card_pool_by_rarity(CardResource.Rarity.RARE)
 		if not rare_pool.is_empty():
 			rare_pool.shuffle()
 			return rare_pool[0]
 		# Fallback to uncommon if no rare cards found
-		must_be_rare = false
+		final_must_be_rare = false
 
 	# Normal probability logic
 	var r = randf()
 	var target_rarity = CardResource.Rarity.COMMON
 
 	# Probabilities: 3% Rare, 37% Uncommon, 60% Common (simplified)
-	# Elite/Boss usually have higher probabilities, but prompt says elite/boss get 100% gold (Rare)
 	if r < 0.03:
 		target_rarity = CardResource.Rarity.RARE
 	elif r < 0.40:
@@ -92,6 +94,6 @@ func _get_random_card_by_rarity(must_be_rare: bool) -> CardResource:
 
 	return null
 
-func _on_card_selected(card_ui, card: CardResource):
+func _on_card_selected(_card_ui, card: CardResource):
 	card_selected.emit(card)
 	queue_free()

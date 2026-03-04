@@ -1,5 +1,5 @@
-extends Node
 class_name AssetHelper
+extends Node
 
 const REAL_PATH = "res://assets/real/"
 const PLACEHOLDER_PATH = "res://icon.svg"
