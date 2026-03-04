@@ -1,63 +1,32 @@
-extends Node
 class_name CombatManager
-
-enum State { START_COMBAT, START_TURN, PLAYER_TURN, ENEMY_TURN, WIN, LOSE }
+extends Node
 
 signal combat_finished(win: bool)
+
+enum State { START_COMBAT, START_TURN, PLAYER_TURN, ENEMY_TURN, WIN, LOSE }
 
 var current_state: State = State.START_COMBAT
 var energy: int = 0
 var max_energy: int = 3
-
-@onready var deck_manager: DeckManager = $DeckManager
-
-# In a real setup, these would be references to the actual nodes
 var player = null
 var enemies: Array = []
+
+@onready var deck_manager: DeckManager = $DeckManager
 
 func _ready():
 	pass
 
-func start_combat(p, ens: Array, deck: Array[CardResource]):
+func start_combat(p, ens: Array, deck_arr: Array[CardResource]):
 	player = p
 	enemies = ens
-	deck_manager.setup_deck(deck)
+	deck_manager.setup_deck(deck_arr)
 	transition_to(State.START_TURN)
 
 func transition_to(new_state: State):
 	current_state = new_state
 	match current_state:
 		State.START_TURN:
-			# Frozen turn skipping
-			if player.stats.frozen > 0:
-				player.stats.frozen -= 1
-				player.update_ui()
-				print("Player frozen, skipping turn!")
-				transition_to(State.ENEMY_TURN)
-				return
-
-			# Stunned skipping
-			if player.stats.stunned > 0:
-				player.stats.stunned -= 1
-				player.update_ui()
-				print("Player stunned, skipping turn!")
-				transition_to(State.ENEMY_TURN)
-				return
-
-			player.stats.reset_block()
-
-			var actual_max_energy = max_energy
-			if player.stats.slow > 0:
-				actual_max_energy = max(0, actual_max_energy - player.stats.slow)
-
-			energy = actual_max_energy
-
-			var draw_count = 5
-			if player.stats.draw_reduction > 0:
-				draw_count = max(0, draw_count - player.stats.draw_reduction)
-
-			deck_manager.draw_cards(draw_count)
-			transition_to(State.PLAYER_TURN)
+			_handle_start_turn()
 		State.PLAYER_TURN:
 			pass # Wait for player input
 		State.ENEMY_TURN:
@@ -76,16 +45,7 @@ func play_card(card: CardResource, target = null):
 
 	var actual_cost = card.cost
 	if card.free_if_chilled:
-		var has_chill = false
-		if target:
-			if target.stats.chill > 0:
-				has_chill = true
-		elif card.target == CardResource.Target.ALL_ENEMIES:
-			for e in enemies:
-				if e.is_alive() and e.stats.chill > 0:
-					has_chill = true
-					break
-		if has_chill:
+		if _is_target_chilled(card, target):
 			actual_cost = 0
 
 	if energy >= actual_cost:
@@ -125,16 +85,8 @@ func end_player_turn():
 		deck_manager.discard_hand()
 
 		if player.stats.hp <= 0:
-			var is_goblin = RunManager.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or \
-							RunManager.character_class == CardResource.CharacterClass.GOBLIN_MAGE
-			if is_goblin:
-				if RunManager.revert_to_core():
-					print("Body died! Reverting to core...")
-					deck_manager.handle_body_swap(RunManager.deck)
-					player.update_ui()
-					transition_to(State.ENEMY_TURN)
-					return
-
+			if _check_goblin_revert():
+				return
 			transition_to(State.LOSE)
 		else:
 			transition_to(State.ENEMY_TURN)
@@ -142,62 +94,24 @@ func end_player_turn():
 func execute_enemy_turns():
 	for enemy in enemies:
 		if enemy.is_alive():
-			# Skip if frozen
-			if enemy.stats.frozen > 0:
-				enemy.stats.frozen -= 1
-				enemy.update_ui()
-				print("Enemy frozen, skipping turn!")
-				continue
-
-			# Skip if stunned
-			if enemy.stats.stunned > 0:
-				enemy.stats.stunned -= 1
-				enemy.update_ui()
-				print("Enemy stunned, skipping turn!")
+			if _should_skip_enemy_turn(enemy):
 				continue
 
 			if enemy is Enemy:
 				enemy.execute_turn(self, player)
 			else:
-				# Basic behavior fallback
-				var damage = 6
-				if enemy.stats.strength > 0:
-					damage += enemy.stats.strength
-				if enemy.stats.weak > 0:
-					damage = floor(damage * 0.75)
-				player.take_damage(damage)
-				enemy.stats.end_turn()
+				_basic_enemy_behavior(enemy)
 
 			_process_burn(enemy)
 			_process_poison(enemy)
 			enemy.update_ui()
 
 	if player.stats.hp <= 0:
-		var is_goblin = RunManager.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or \
-						RunManager.character_class == CardResource.CharacterClass.GOBLIN_MAGE
-		if is_goblin:
-			if RunManager.revert_to_core():
-				print("Body died! Reverting to core...")
-				deck_manager.handle_body_swap(RunManager.deck)
-				player.update_ui()
-				transition_to(State.START_TURN)
-				return
-
+		if _check_goblin_revert():
+			return
 		transition_to(State.LOSE)
 	else:
 		transition_to(State.START_TURN)
-
-func _process_burn(entity):
-	if entity.stats.burn > 0:
-		entity.stats.lose_hp(entity.stats.burn)
-		entity.stats.burn = max(0, entity.stats.burn - 10)
-		entity.update_ui()
-
-func _process_poison(entity):
-	if entity.stats.poison > 0:
-		entity.stats.lose_hp(entity.stats.poison)
-		entity.stats.poison = max(0, entity.stats.poison - 1)
-		entity.update_ui()
 
 func apply_chill(entity, stacks: int):
 	entity.stats.chill += stacks
@@ -219,7 +133,6 @@ func check_enemies_alive():
 func spawn_enemy(enemy_resource: EnemyResource):
 	var enemy_scene = load("res://src/entities/Enemy.tscn")
 	if not enemy_scene:
-		# Fallback if scene is not found (assuming it exists or can be created)
 		print("Enemy scene not found, cannot spawn!")
 		return
 
@@ -229,7 +142,103 @@ func spawn_enemy(enemy_resource: EnemyResource):
 		enemies_container.add_child(new_enemy)
 		new_enemy.setup(enemy_resource)
 		enemies.append(new_enemy)
-		# Position it randomly or based on existing enemies
 		new_enemy.position = Vector2(800 + randf_range(-100, 100), 400 + randf_range(-100, 100))
 	else:
 		print("Enemies container not found!")
+
+func _handle_start_turn():
+	# Frozen turn skipping
+	if player.stats.frozen > 0:
+		player.stats.frozen -= 1
+		player.update_ui()
+		print("Player frozen, skipping turn!")
+		transition_to(State.ENEMY_TURN)
+		return
+
+	# Stunned skipping
+	if player.stats.stunned > 0:
+		player.stats.stunned -= 1
+		player.update_ui()
+		print("Player stunned, skipping turn!")
+		transition_to(State.ENEMY_TURN)
+		return
+
+	player.stats.reset_block()
+
+	var actual_max_energy = max_energy
+	if player.stats.slow > 0:
+		actual_max_energy = max(0, actual_max_energy - player.stats.slow)
+
+	energy = actual_max_energy
+
+	var draw_count = 5
+	if player.stats.draw_reduction > 0:
+		draw_count = max(0, draw_count - player.stats.draw_reduction)
+
+	deck_manager.draw_cards(draw_count)
+	transition_to(State.PLAYER_TURN)
+
+func _is_target_chilled(card: CardResource, target) -> bool:
+	if target:
+		if target.stats.chill > 0:
+			return true
+	elif card.target == CardResource.Target.ALL_ENEMIES:
+		for e in enemies:
+			if e.is_alive() and e.stats.chill > 0:
+				return true
+	return false
+
+func _check_goblin_revert() -> bool:
+	var is_goblin = RunManager.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or \
+					RunManager.character_class == CardResource.CharacterClass.GOBLIN_MAGE
+	if is_goblin:
+		if RunManager.revert_to_core():
+			print("Body died! Reverting to core...")
+			deck_manager.handle_body_swap(RunManager.deck)
+			player.update_ui()
+			# If it was player turn, we still go to enemy turn
+			# If it was enemy turn, we go back to start turn
+			if current_state == State.PLAYER_TURN:
+				transition_to(State.ENEMY_TURN)
+			else:
+				transition_to(State.START_TURN)
+			return true
+	return false
+
+func _should_skip_enemy_turn(enemy) -> bool:
+	# Skip if frozen
+	if enemy.stats.frozen > 0:
+		enemy.stats.frozen -= 1
+		enemy.update_ui()
+		print("Enemy frozen, skipping turn!")
+		return true
+
+	# Skip if stunned
+	if enemy.stats.stunned > 0:
+		enemy.stats.stunned -= 1
+		enemy.update_ui()
+		print("Enemy stunned, skipping turn!")
+		return true
+
+	return false
+
+func _basic_enemy_behavior(enemy):
+	var damage = 6
+	if enemy.stats.strength > 0:
+		damage += enemy.stats.strength
+	if enemy.stats.weak > 0:
+		damage = floor(damage * 0.75)
+	player.take_damage(damage)
+	enemy.stats.end_turn()
+
+func _process_burn(entity):
+	if entity.stats.burn > 0:
+		entity.stats.lose_hp(entity.stats.burn)
+		entity.stats.burn = max(0, entity.stats.burn - 10)
+		entity.update_ui()
+
+func _process_poison(entity):
+	if entity.stats.poison > 0:
+		entity.stats.lose_hp(entity.stats.poison)
+		entity.stats.poison = max(0, entity.stats.poison - 1)
+		entity.update_ui()

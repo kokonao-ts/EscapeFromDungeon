@@ -1,9 +1,17 @@
-extends Resource
 class_name CardResource
+extends Resource
 
 enum Type { ATTACK, SKILL, POWER }
 enum Target { ENEMY, SELF, ALL_ENEMIES }
-enum CharacterClass { IRONCLAD, SILENT, WATCHER, NEUTRAL, GOBLIN_ASSASSIN, GOBLIN_MAGE, GOBLIN_SHARED }
+enum CharacterClass {
+	IRONCLAD,
+	SILENT,
+	WATCHER,
+	NEUTRAL,
+	GOBLIN_ASSASSIN,
+	GOBLIN_MAGE,
+	GOBLIN_SHARED
+}
 enum Rarity { COMMON, UNCOMMON, RARE, STARTER }
 
 @export var card_id: String = ""

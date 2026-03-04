@@ -1,10 +1,11 @@
-extends Node2D
 class_name Entity
-
-@export var stats: Stats
-@onready var entity_ui = $EntityUI
+extends Node2D
 
 signal died
+
+@export var stats: Stats
+
+@onready var entity_ui = $EntityUI
 
 func _ready():
 	if stats:

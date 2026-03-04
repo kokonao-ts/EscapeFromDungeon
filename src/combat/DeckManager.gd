@@ -1,5 +1,5 @@
-extends Node
 class_name DeckManager
+extends Node
 
 signal hand_updated
 

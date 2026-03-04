@@ -1,9 +1,10 @@
-extends Control
 class_name CardUI
+extends Control
 
 signal card_played(card_ui)
 
 var card_resource: CardResource
+
 @onready var name_label = $VBoxContainer/Name
 @onready var cost_label = $VBoxContainer/Cost
 @onready var description_label = $VBoxContainer/Description

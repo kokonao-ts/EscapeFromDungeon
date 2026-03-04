@@ -1,5 +1,9 @@
 extends Control
 
+var card_ui_scene = preload("res://src/ui/CardUI.tscn")
+var cards_path = "res://src/cards/resources/"
+var enemies_path = "res://src/entities/resources/"
+
 @onready var card_list = %CardList
 @onready var enemy_list = %EnemyList
 @onready var combat_manager = %CombatManager
@@ -13,10 +17,6 @@ extends Control
 @onready var clear_status_button = %ClearStatusButton
 @onready var enemy_turn_button = $HBoxContainer/CombatArea/Controls/EnemyTurnButton
 @onready var back_button = %BackButton
-
-var card_ui_scene = preload("res://src/ui/CardUI.tscn")
-var cards_path = "res://src/cards/resources/"
-var enemies_path = "res://src/entities/resources/"
 
 func _ready():
 	# Initial setup

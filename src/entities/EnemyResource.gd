@@ -1,5 +1,5 @@
-extends Resource
 class_name EnemyResource
+extends Resource
 
 @export var enemy_id: String = ""
 @export var enemy_name: String = "Enemy"

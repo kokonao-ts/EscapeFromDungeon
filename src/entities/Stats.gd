@@ -1,5 +1,5 @@
-extends Resource
 class_name Stats
+extends Resource
 
 @export var max_hp: int = 50
 @export var hp: int = 50
@@ -61,7 +61,10 @@ func end_turn():
 		slow -= 1
 	if draw_reduction > 0:
 		draw_reduction -= 1
+
 	# Evasion usually expires at end of turn
 	if evasion > 0:
 		evasion = 0
+
 	# Burn, Chill/Frozen, and Poison are typically handled by CombatManager
+	# to allow for fine-grained timing control (e.g. before/after skip-turn checks)
