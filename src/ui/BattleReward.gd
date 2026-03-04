@@ -35,7 +35,9 @@ func generate_rewards():
 					or current_node.type == MapNode.Type.BOSS
 
 	for i in range(remaining_count):
-		var card = _get_random_card_by_rarity(is_elite)
+		# If Elite/Boss, only the first random choice is guaranteed Rare
+		var must_be_rare = is_elite and (i == 0)
+		var card = _get_random_card_by_rarity(must_be_rare)
 		if card:
 			choices.append(card)
 

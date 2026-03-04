@@ -36,6 +36,8 @@ func display_act():
 func get_node_name(type: MapNode.Type) -> String:
 	match type:
 		MapNode.Type.COMBAT: return "Combat"
+		MapNode.Type.ELITE: return "Elite"
+		MapNode.Type.REST: return "休息點 (Rest Site)"
 		MapNode.Type.BOSS: return "Boss"
 		_: return "Unknown"
 
@@ -43,11 +45,18 @@ func _on_node_selected(index: int):
 	RunManager.current_node_index = index
 	var node = current_act.nodes[index]
 
-	if node.type == MapNode.Type.COMBAT:
+	if node.type == MapNode.Type.COMBAT or node.type == MapNode.Type.ELITE:
 		get_tree().change_scene_to_file("res://src/combat/CombatRoom.tscn")
 	elif node.type == MapNode.Type.BOSS:
 		# After winning a boss battle, move to next act
 		get_tree().change_scene_to_file("res://src/combat/CombatRoom.tscn")
+	elif node.type == MapNode.Type.REST:
+		# Rest Site: Heal 30% of max HP for current body
+		var body = RunManager.bodies[RunManager.current_body_index]
+		var heal_amount = floor(body.max_hp * 0.3)
+		RunManager.player_stats.hp = min(RunManager.player_stats.max_hp, RunManager.player_stats.hp + heal_amount)
+		body.hp = RunManager.player_stats.hp
+		display_act()
 	else:
 		# Just refresh if it's some other type not implemented yet
 		display_act()
