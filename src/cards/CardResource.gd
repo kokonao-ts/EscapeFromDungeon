@@ -37,6 +37,57 @@ enum Rarity { COMMON, UNCOMMON, RARE, STARTER }
 @export var is_technique: bool = false
 @export var is_goblin_special: bool = false
 
-func apply_effects(user, targets):
-	# Basic implementation to be expanded in CombatManager or Entity logic
-	pass
+func apply_effects(user: Entity, targets: Array[Entity], combat_manager):
+	# Damage Calculation
+	var base_damage = damage
+	if base_damage > 0:
+		base_damage += user.stats.strength
+		if user.stats.weak > 0:
+			base_damage = floor(base_damage * 0.75)
+
+	# Apply effects to targets
+	for t in targets:
+		if not t.is_alive():
+			continue
+
+		if base_damage > 0:
+			for i in range(hits):
+				t.take_damage(base_damage)
+				# Thorns damage back to user
+				if t.stats.thorns > 0:
+					user.stats.lose_hp(t.stats.thorns)
+				# Electrified damage back to user
+				if t.stats.electrified > 0:
+					user.stats.lose_hp(t.stats.electrified)
+
+		if vulnerable > 0:
+			t.stats.vulnerable += vulnerable
+			t.update_ui()
+
+		if weak > 0:
+			t.stats.weak += weak
+			t.update_ui()
+
+		if burn > 0:
+			t.stats.burn += burn
+			t.update_ui()
+
+		if chill > 0:
+			combat_manager.apply_chill(t, chill)
+
+	# Apply effects to user
+	if block > 0:
+		user.add_block(block)
+
+	if draw_cards > 0:
+		combat_manager.deck_manager.draw_cards(draw_cards)
+
+	combat_manager.energy += energy_gain
+
+	if strength > 0:
+		user.stats.strength += strength
+		user.update_ui()
+
+	if self_damage > 0:
+		user.stats.lose_hp(self_damage)
+		user.update_ui()
