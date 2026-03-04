@@ -34,6 +34,8 @@ enum Rarity { COMMON, UNCOMMON, RARE, STARTER }
 @export var exhaust: bool = false
 @export var self_damage: int = 0
 @export var free_if_chilled: bool = false
+@export var is_technique: bool = false
+@export var is_goblin_special: bool = false
 
 func apply_effects(user, targets):
 	# Basic implementation to be expanded in CombatManager or Entity logic

@@ -133,8 +133,8 @@ func show_rewards():
 	reward_ui.tree_exited.connect(_on_reward_finished)
 
 func _on_reward_card_selected(card: CardResource):
-	RunManager.deck.append(card)
-	print("Added %s to deck" % card.card_name)
+	RunManager.add_card_to_run(card)
+	print("Added %s to run deck" % card.card_name)
 
 func _on_reward_finished():
 	# Check if it was a boss battle

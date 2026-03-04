@@ -3,6 +3,7 @@ class_name EnemyResource
 
 @export var enemy_id: String = ""
 @export var enemy_name: String = "Enemy"
+@export var character_class: CardResource.CharacterClass = CardResource.CharacterClass.NEUTRAL
 @export var max_hp: int = 50
 @export var energy_per_turn: int = 2
 @export var max_actions_per_turn: int = 3

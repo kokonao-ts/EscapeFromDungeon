@@ -178,18 +178,20 @@ func play_card(card: CardResource, target = null):
 			deck_manager.discard_card(card)
 
 		# Possession mechanic for Goblin Assassin
-		if RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN:
+		if RunManager.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN:
 			if card.card_id == "execute_knife" and target and not target.is_alive():
 				if target is Enemy and target.enemy_resource:
 					print("Possessing %s!" % target.enemy_resource.enemy_name)
 					RunManager.possess_enemy(target.enemy_resource)
-					# Reset deck for the new body during combat
-					deck_manager.setup_deck(RunManager.deck)
-					deck_manager.draw_cards(5)
+					# Handle body swap logic: filter hand, discard to draw, shuffle
+					deck_manager.handle_body_swap(RunManager.deck)
+					# Replenish hand if filtered cards left it small
+					if deck_manager.hand.size() < 5:
+						deck_manager.draw_cards(5 - deck_manager.hand.size())
 					player.update_ui()
 
 		# Body Swap mechanic for Goblin Mage
-		if RunManager.character_class == RunManager.CharacterClass.GOBLIN_MAGE:
+		if RunManager.character_class == CardResource.CharacterClass.GOBLIN_MAGE:
 			if card.card_id == "body_swap" and target:
 				var hp_threshold = player.stats.max_hp * 0.25
 				if player.stats.hp <= hp_threshold:
@@ -199,9 +201,11 @@ func play_card(card: CardResource, target = null):
 						target.take_damage(9999)
 						# Possess the body
 						RunManager.possess_enemy(target.enemy_resource)
-						# Reset deck for the new body during combat
-						deck_manager.setup_deck(RunManager.deck)
-						deck_manager.draw_cards(5)
+						# Handle body swap logic: filter hand, discard to draw, shuffle
+						deck_manager.handle_body_swap(RunManager.deck)
+						# Replenish hand
+						if deck_manager.hand.size() < 5:
+							deck_manager.draw_cards(5 - deck_manager.hand.size())
 						player.update_ui()
 				else:
 					print("HP too high for Body Swap!")
@@ -221,13 +225,12 @@ func end_player_turn():
 		deck_manager.discard_hand()
 
 		if player.stats.hp <= 0:
-			var is_goblin = RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN or \
-							RunManager.character_class == RunManager.CharacterClass.GOBLIN_MAGE
+			var is_goblin = RunManager.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or \
+							RunManager.character_class == CardResource.CharacterClass.GOBLIN_MAGE
 			if is_goblin:
 				if RunManager.revert_to_core():
 					print("Body died! Reverting to core...")
-					deck_manager.setup_deck(RunManager.deck)
-					deck_manager.draw_cards(5)
+					deck_manager.handle_body_swap(RunManager.deck)
 					player.update_ui()
 					transition_to(State.ENEMY_TURN)
 					return
@@ -270,13 +273,12 @@ func execute_enemy_turns():
 			enemy.update_ui()
 
 	if player.stats.hp <= 0:
-		var is_goblin = RunManager.character_class == RunManager.CharacterClass.GOBLIN_ASSASSIN or \
-						RunManager.character_class == RunManager.CharacterClass.GOBLIN_MAGE
+		var is_goblin = RunManager.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or \
+						RunManager.character_class == CardResource.CharacterClass.GOBLIN_MAGE
 		if is_goblin:
 			if RunManager.revert_to_core():
 				print("Body died! Reverting to core...")
-				deck_manager.setup_deck(RunManager.deck)
-				deck_manager.draw_cards(5)
+				deck_manager.handle_body_swap(RunManager.deck)
 				player.update_ui()
 				transition_to(State.START_TURN)
 				return
