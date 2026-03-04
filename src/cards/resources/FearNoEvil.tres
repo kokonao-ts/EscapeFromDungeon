@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/cards/CardResource.gd" id="1_x"]
+
+[resource]
+script = ExtResource("1_x")
+card_id = "watcher_fear_no_evil"
+card_name = "Fear No Evil"
+cost = 1
+type = 0
+character_class = 2
+target = 0
+rarity = 1
+icon = "card_placeholder.png"
+description = "Deal 8 damage. Gain 2 Thorns (representing Calm stance benefit)."
+damage = 8
+block = 0
+thorns = 2
+draw_cards = 0
+energy_gain = 0
+hits = 1
+vulnerable = 0
+weak = 0
+strength = 0
+exhaust = false
+self_damage = 0

@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/cards/CardResource.gd" id="1_x"]
+
+[resource]
+script = ExtResource("1_x")
+card_id = "watcher_eruption_plus"
+card_name = "Eruption+"
+cost = 2
+type = 0
+character_class = 2
+target = 0
+rarity = 1
+icon = "card_placeholder.png"
+description = "Deal 12 damage. Gain 2 Strength (representing Wrath stance benefit)."
+damage = 12
+block = 0
+strength = 2
+draw_cards = 0
+energy_gain = 0
+hits = 1
+vulnerable = 0
+weak = 0
+exhaust = false
+self_damage = 0

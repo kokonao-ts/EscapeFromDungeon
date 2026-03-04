@@ -179,6 +179,7 @@ func generate_act(act_num: int):
 	var boss_path = "res://src/entities/resources/boss/"
 
 	var normal_enemies = []
+	var elite_enemies = []
 	var bosses = []
 
 	# Try to load from new structure, fallback to old if not found
@@ -210,7 +211,7 @@ func generate_act(act_num: int):
 	if bosses.is_empty():
 		bosses = [normal_enemies[0]]
 
-	# Diversified sequence: Combat, Combat, Elite, Combat, Rest Site
+	# Diversified sequence: Combat, Combat, Elite, Combat, Rest Site (with randomization)
 	var node_types = [
 		MapNode.Type.COMBAT,
 		MapNode.Type.COMBAT,
@@ -219,12 +220,29 @@ func generate_act(act_num: int):
 		MapNode.Type.REST
 	]
 
+	# Keep the first combat fixed, and the last rest site fixed
+	# Shuffle the middle three nodes (indices 1, 2, 3)
+	var middle = [node_types[1], node_types[2], node_types[3]]
+	middle.shuffle()
+	node_types[1] = middle[0]
+	node_types[2] = middle[1]
+	node_types[3] = middle[2]
+
+	# Identify potential Elites from current pool (or hardcode for now)
+	# In a real project, we'd have an 'elite/' folder.
+	for enemy in normal_enemies:
+		if "Adventurer" in enemy.enemy_name or "Bounty" in enemy.enemy_name or "ThiefElder" in enemy.enemy_id:
+			elite_enemies.append(enemy)
+
+	if elite_enemies.is_empty():
+		elite_enemies = [normal_enemies[randi() % normal_enemies.size()]]
+
 	for i in range(5):
 		var node = MapNode.new()
 		node.type = node_types[i]
 		node.position = Vector2(0, i * 100)
 
-		if node.type == MapNode.Type.COMBAT or node.type == MapNode.Type.ELITE:
+		if node.type == MapNode.Type.COMBAT:
 			# For Act 3, maybe have multiple enemies?
 			if act_num == 3 and randf() > 0.5:
 				var ens = []
@@ -233,6 +251,8 @@ func generate_act(act_num: int):
 				node.data["enemies"] = ens
 			else:
 				node.data["enemy_resource"] = normal_enemies[randi() % normal_enemies.size()]
+		elif node.type == MapNode.Type.ELITE:
+			node.data["enemy_resource"] = elite_enemies[randi() % elite_enemies.size()]
 
 		current_map.nodes.append(node)
 
