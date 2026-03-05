@@ -25,6 +25,8 @@ cost = 2
 description = "Aerial Suppression"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "toucan"
 enemy_name = "巨嘴鳥"

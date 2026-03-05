@@ -9,6 +9,7 @@ card_name = "Strike"
 cost = 1
 type = 0
 character_class = 0
+categories = 10
 rarity = 3
 target = 0
 icon = "strike.png"

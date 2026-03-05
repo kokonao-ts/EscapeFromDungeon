@@ -9,6 +9,7 @@ card_name = "Perfected Strike"
 cost = 2
 type = 0
 character_class = 0
+categories = 10
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 6 damage. Deals an additional 2 damage for ALL of your cards containing 'Strike'."

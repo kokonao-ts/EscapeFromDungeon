@@ -26,6 +26,8 @@ cost = 1
 description = "Cull"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "bone_eating_dog"
 enemy_name = "噬骨犬"

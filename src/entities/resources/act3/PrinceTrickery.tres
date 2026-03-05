@@ -25,6 +25,8 @@ cost = 1
 description = "Confuse"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "prince_trickery"
 enemy_name = "詭術王子"

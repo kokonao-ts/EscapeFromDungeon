@@ -9,6 +9,7 @@ card_name = "Wild Strike"
 cost = 1
 type = 0
 character_class = 0
+categories = 10
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 12 damage. Shuffle a Wound into your draw pile."

@@ -9,6 +9,7 @@ card_name = "Brutality"
 cost = 0
 type = 2
 character_class = 0
+categories = 42
 target = 1
 icon = "card_placeholder.png"
 description = "At the start of your turn, lose 1 HP and draw 1 card."

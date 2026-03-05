@@ -20,6 +20,8 @@ cost = 1
 description = "Rotting Bullet"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "chaos_warlock"
 enemy_name = "邪術師"

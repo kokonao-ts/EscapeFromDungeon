@@ -9,6 +9,7 @@ card_name = "Dual Wield"
 cost = 1
 type = 1
 character_class = 0
+categories = 10
 target = 1
 icon = "card_placeholder.png"
 description = "Choose an Attack or Power card in your hand. Add a copy of it into your hand."

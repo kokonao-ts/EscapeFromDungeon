@@ -25,6 +25,8 @@ cost = 0
 description = "Split Prepare"
 
 [resource]
+character_class = 0
+supported_categories = 5
 script = ExtResource("2_b")
 enemy_id = "small_slime_green"
 enemy_name = "Small Slime (Green)"

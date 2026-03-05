@@ -25,6 +25,8 @@ cost = 0
 description = "Berserker Passion"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "berserker_brother"
 enemy_name = "狂戰士哥哥"

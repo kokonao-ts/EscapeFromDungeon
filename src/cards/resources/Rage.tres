@@ -9,6 +9,7 @@ card_name = "Rage"
 cost = 0
 type = 1
 character_class = 0
+categories = 10
 target = 1
 icon = "card_placeholder.png"
 description = "Whenever you play an Attack this turn, gain 3 Block."

@@ -9,6 +9,7 @@ card_name = "Pommel Strike"
 cost = 1
 type = 0
 character_class = 0
+categories = 10
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 9 damage. Draw 1 card."

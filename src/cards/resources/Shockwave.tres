@@ -9,6 +9,7 @@ card_name = "Shockwave"
 cost = 2
 type = 1
 character_class = 0
+categories = 10
 target = 2
 icon = "card_placeholder.png"
 description = "Apply 3 Weak and Vulnerable to ALL enemies. Exhaust."

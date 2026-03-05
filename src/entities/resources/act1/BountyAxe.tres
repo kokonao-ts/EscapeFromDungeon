@@ -34,6 +34,8 @@ cost = 2
 description = "Axe Throw"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "bounty_axe"
 enemy_name = "斧鬥士"

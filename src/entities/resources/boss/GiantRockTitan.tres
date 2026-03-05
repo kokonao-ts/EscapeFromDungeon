@@ -32,6 +32,8 @@ cost = 1
 description = "Mountain Echo"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "giant_rock_titan"
 enemy_name = "巨岩泰坦"

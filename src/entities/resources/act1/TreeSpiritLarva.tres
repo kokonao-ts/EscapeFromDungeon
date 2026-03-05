@@ -26,6 +26,8 @@ cost = 2
 description = "Slap"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "tree_spirit_larva"
 enemy_name = "樹精幼體"

@@ -20,6 +20,8 @@ cost = 2
 description = "Flame Dance"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "fire_sword_thief"
 enemy_name = "火劍大盜"

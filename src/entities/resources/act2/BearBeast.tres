@@ -25,6 +25,8 @@ cost = 1
 description = "Block Stance"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "bear_beast"
 enemy_name = "熊獸"

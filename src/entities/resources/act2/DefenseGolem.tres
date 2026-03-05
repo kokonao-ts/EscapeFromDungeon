@@ -25,6 +25,8 @@ cost = 1
 description = "Guard"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "defense_golem"
 enemy_name = "防禦魔像"

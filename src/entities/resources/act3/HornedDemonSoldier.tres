@@ -26,6 +26,8 @@ cost = 1
 description = "Berserk"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "horned_demon_soldier"
 enemy_name = "角魔兵"

@@ -44,6 +44,8 @@ cost = 1
 description = "Immortal Palm"
 
 [resource]
+character_class = 0
+supported_categories = 33
 script = ExtResource("2_b")
 enemy_id = "naraku_abyss_form"
 enemy_name = "Naraku Lord (Abyss Form)"

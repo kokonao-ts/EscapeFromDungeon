@@ -41,6 +41,8 @@ cost = 3
 description = "Black Flame Burst"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "black_flame_ancient_dragon"
 enemy_name = "黑炎上古龍"

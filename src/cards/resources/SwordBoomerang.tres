@@ -9,6 +9,7 @@ card_name = "Sword Boomerang"
 cost = 1
 type = 0
 character_class = 0
+categories = 10
 target = 2
 icon = "card_placeholder.png"
 description = "Deal 3 damage to a random enemy 3 times."

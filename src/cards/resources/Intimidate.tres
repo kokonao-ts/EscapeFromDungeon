@@ -9,6 +9,7 @@ card_name = "Intimidate"
 cost = 0
 type = 1
 character_class = 0
+categories = 10
 target = 2
 icon = "card_placeholder.png"
 description = "Apply 1 Weak to ALL enemies. Exhaust."

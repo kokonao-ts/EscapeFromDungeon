@@ -24,6 +24,8 @@ cost = 1
 description = "Ghost Flame Bullet"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "dragon_mage"
 enemy_name = "龍法師"

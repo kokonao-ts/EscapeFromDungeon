@@ -9,6 +9,7 @@ card_name = "Entrench"
 cost = 2
 type = 1
 character_class = 0
+categories = 10
 target = 1
 icon = "card_placeholder.png"
 description = "Double your current Block."

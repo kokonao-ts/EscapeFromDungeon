@@ -26,6 +26,8 @@ cost = 1
 description = "Aerial Evasion"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "wyvern"
 enemy_name = "小飛龍"

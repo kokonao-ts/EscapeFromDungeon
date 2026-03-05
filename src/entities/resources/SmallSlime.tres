@@ -26,6 +26,8 @@ description = "Lick"
 icon = ""
 
 [resource]
+character_class = 0
+supported_categories = 5
 script = ExtResource("2_b")
 enemy_id = "small_slime_acid"
 enemy_name = "Small Slime (Acid)"

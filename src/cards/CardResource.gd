@@ -4,9 +4,6 @@ extends Resource
 enum Type { ATTACK, SKILL, POWER }
 enum Target { ENEMY, SELF, ALL_ENEMIES }
 enum CharacterClass {
-	IRONCLAD,
-	SILENT,
-	WATCHER,
 	NEUTRAL,
 	GOBLIN_ASSASSIN,
 	GOBLIN_MAGE,
@@ -14,9 +11,20 @@ enum CharacterClass {
 }
 enum Rarity { COMMON, UNCOMMON, RARE, STARTER }
 
+enum Category {
+	GENERAL = 1,
+	SWORD_SKILL = 2,
+	MAGIC = 4,
+	WEAPON = 8,
+	MIRACLE = 16,
+	DEMON = 32,
+	UNIQUE = 64
+}
+
 @export var card_id: String = ""
 @export var card_name: String = "Card"
-@export var character_class: CharacterClass = CharacterClass.IRONCLAD
+@export var character_class: CharacterClass = CharacterClass.NEUTRAL
+@export_flags("General:1", "Sword Skill:2", "Magic:4", "Weapon:8", "Miracle:16", "Demon:32", "Unique:64") var categories: int = 1
 @export var rarity: Rarity = Rarity.COMMON
 @export var cost: int = 1
 @export var type: Type = Type.ATTACK

@@ -6,7 +6,8 @@
 script = ExtResource("1_script")
 card_id = "body_swap"
 card_name = "交換身體"
-character_class = 5
+character_class = 0
+categories = 16
 rarity = 3
 cost = 2
 type = 1

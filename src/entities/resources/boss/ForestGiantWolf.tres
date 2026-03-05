@@ -40,6 +40,8 @@ cost = 1
 description = "Wild Reflex"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "forest_giant_wolf"
 enemy_name = "森林巨狼"

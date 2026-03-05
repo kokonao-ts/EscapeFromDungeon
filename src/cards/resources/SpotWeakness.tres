@@ -9,6 +9,7 @@ card_name = "Spot Weakness"
 cost = 1
 type = 1
 character_class = 0
+categories = 10
 rarity = 1
 target = 0
 icon = "card_placeholder.png"

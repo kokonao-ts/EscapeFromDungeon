@@ -9,6 +9,7 @@ card_name = "Juggernaut"
 cost = 2
 type = 2
 character_class = 0
+categories = 10
 target = 1
 icon = "card_placeholder.png"
 description = "Whenever you gain Block, deal 5 damage to a random enemy."

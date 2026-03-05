@@ -25,6 +25,8 @@ cost = 2
 description = "Leyline Vibration"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "earth_elemental_larva"
 enemy_name = "土元素幼體"

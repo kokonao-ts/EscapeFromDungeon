@@ -39,6 +39,8 @@ cost = 1
 description = "Regeneration Sap"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "ancient_tree_spirit"
 enemy_name = "巨樹古靈"

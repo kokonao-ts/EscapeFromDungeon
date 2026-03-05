@@ -25,6 +25,8 @@ cost = 1
 description = "Alert"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "small_wild_wolf"
 enemy_name = "小型野狼"

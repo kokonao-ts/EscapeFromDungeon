@@ -6,7 +6,8 @@
 script = ExtResource("1_script")
 card_id = "mana_barrier"
 card_name = "法力護盾"
-character_class = 5
+character_class = 0
+categories = 16
 cost = 1
 type = 1
 target = 1

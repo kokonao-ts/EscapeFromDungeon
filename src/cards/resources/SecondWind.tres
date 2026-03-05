@@ -9,6 +9,7 @@ card_name = "Second Wind"
 cost = 1
 type = 1
 character_class = 0
+categories = 10
 target = 1
 icon = "card_placeholder.png"
 description = "Exhaust all non-Attack cards in your hand. Gain 5 Block for each card Exhausted."

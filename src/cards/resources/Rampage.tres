@@ -9,6 +9,7 @@ card_name = "Rampage"
 cost = 1
 type = 0
 character_class = 0
+categories = 10
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 8 damage. Every time this card is played, increase its damage by 5 for this combat."
