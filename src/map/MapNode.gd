@@ -5,6 +5,7 @@ enum Type { COMBAT, ELITE, BOSS, SHOP, REST, EVENT }
 
 @export var type: Type = Type.COMBAT
 @export var position: Vector2
+@export var layer: int = 0
 @export var connections: Array[int] = [] # Indices of next possible nodes
 @export var act: int = 1
 

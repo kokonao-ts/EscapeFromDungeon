@@ -161,63 +161,126 @@ func generate_act(act_num: int):
 	if bosses.is_empty():
 		bosses = [normal_enemies[0]]
 
-	# Diversified sequence: Combat, Combat, Elite, Combat, Rest Site (with randomization)
-	var node_types = [
-		MapNode.Type.COMBAT,
-		MapNode.Type.COMBAT,
-		MapNode.Type.ELITE,
-		MapNode.Type.COMBAT,
-		MapNode.Type.REST
-	]
-
-	# Keep the first combat fixed, and the last rest site fixed
-	# Shuffle the middle three nodes (indices 1, 2, 3)
-	var middle = [node_types[1], node_types[2], node_types[3]]
-	middle.shuffle()
-	node_types[1] = middle[0]
-	node_types[2] = middle[1]
-	node_types[3] = middle[2]
-
-	# Identify potential Elites from current pool (or hardcode for now)
-	# In a real project, we'd have an 'elite/' folder.
+	# Identify potential Elites from current pool
 	for enemy in normal_enemies:
 		if "Adventurer" in enemy.enemy_name or "Bounty" in enemy.enemy_name or "ThiefElder" in enemy.enemy_id:
 			elite_enemies.append(enemy)
 
 	if elite_enemies.is_empty():
-		elite_enemies = [normal_enemies[randi() % normal_enemies.size()]]
+		# Fallback: use some random normal enemies as elites if none identified
+		var tmp = normal_enemies.duplicate()
+		tmp.shuffle()
+		elite_enemies = tmp.slice(0, min(3, tmp.size()))
 
-	for i in range(5):
-		var node = MapNode.new()
-		node.type = node_types[i]
-		node.position = Vector2(0, i * 100)
+	var layers = [] # Array of Arrays of node indices
+	var total_layers = 8
+	var node_count = 0
 
-		if node.type == MapNode.Type.COMBAT:
-			# For Act 3, maybe have multiple enemies?
-			if act_num == 3 and randf() > 0.5:
-				var ens = []
-				ens.append(normal_enemies[randi() % normal_enemies.size()])
-				ens.append(normal_enemies[randi() % normal_enemies.size()])
-				node.data["enemies"] = ens
+	# Create nodes in layers
+	for l in range(total_layers):
+		var layer_nodes = []
+		var num_nodes = randi_range(2, 4)
+		if l == total_layers - 1: num_nodes = 1 # Last layer before boss is a rest site
+
+		for i in range(num_nodes):
+			var node = MapNode.new()
+			node.layer = l
+			# Position will be refined in UI, but we store logical grid pos
+			node.position = Vector2(i, l)
+
+			if l == 0:
+				node.type = MapNode.Type.COMBAT
+			elif l == total_layers - 1:
+				node.type = MapNode.Type.REST
+			elif l < 2:
+				node.type = MapNode.Type.COMBAT if randf() < 0.8 else MapNode.Type.EVENT
 			else:
+				var r = randf()
+				if r < 0.6: node.type = MapNode.Type.COMBAT
+				elif r < 0.8: node.type = MapNode.Type.ELITE
+				elif r < 0.9: node.type = MapNode.Type.REST
+				else: node.type = MapNode.Type.EVENT
+
+			current_map.nodes.append(node)
+			layer_nodes.append(node_count)
+			node_count += 1
+		layers.append(layer_nodes)
+
+	# Connect nodes between layers
+	for l in range(total_layers - 1):
+		var current_layer = layers[l]
+		var next_layer = layers[l+1]
+
+		for i in range(current_layer.size()):
+			var node_idx = current_layer[i]
+			var node = current_map.nodes[node_idx]
+
+			# Every node connects to at least one in the next layer
+			var target_idx = i % next_layer.size()
+			node.connections.append(next_layer[target_idx])
+
+			# Chance to connect to an adjacent node in next layer
+			if next_layer.size() > 1:
+				var other_idx = (target_idx + 1) % next_layer.size()
+				if randf() > 0.6 and not next_layer[other_idx] in node.connections:
+					node.connections.append(next_layer[other_idx])
+
+	# Ensure every node in the next layer (except the first layer) has at least one incoming connection
+	for l in range(1, total_layers):
+		var current_layer = layers[l]
+		var prev_layer = layers[l-1]
+		for node_idx in current_layer:
+			var has_incoming = false
+			for prev_idx in prev_layer:
+				if node_idx in current_map.nodes[prev_idx].connections:
+					has_incoming = true
+					break
+			if not has_incoming:
+				# Connect a random node from prev layer to this one
+				var random_prev = prev_layer[randi() % prev_layer.size()]
+				current_map.nodes[random_prev].connections.append(node_idx)
+
+	# Boss node
+	var boss_node = MapNode.new()
+	boss_node.type = MapNode.Type.BOSS
+	boss_node.layer = total_layers
+	boss_node.position = Vector2(0, total_layers)
+	current_map.nodes.append(boss_node)
+	var boss_idx = node_count
+
+	# Connect all nodes in last layer to boss
+	for node_idx in layers[total_layers - 1]:
+		current_map.nodes[node_idx].connections.append(boss_idx)
+
+	# Assign enemies and ensure uniqueness within the act as much as possible
+	var shuffled_normals = normal_enemies.duplicate()
+	shuffled_normals.shuffle()
+	var normal_idx = 0
+
+	var shuffled_elites = elite_enemies.duplicate()
+	shuffled_elites.shuffle()
+	var elite_idx = 0
+
+	for node in current_map.nodes:
+		if node.type == MapNode.Type.COMBAT:
+			if normal_idx < shuffled_normals.size():
+				node.data["enemy_resource"] = shuffled_normals[normal_idx]
+				normal_idx += 1
+			else:
+				# Reuse if act is very long, but try to stay unique
 				node.data["enemy_resource"] = normal_enemies[randi() % normal_enemies.size()]
 		elif node.type == MapNode.Type.ELITE:
-			node.data["enemy_resource"] = elite_enemies[randi() % elite_enemies.size()]
-
-		current_map.nodes.append(node)
-
-	var boss = MapNode.new()
-	boss.type = MapNode.Type.BOSS
-	boss.position = Vector2(0, 500)
-
-	# If final act (3 or hidden 4), use specific bosses
-	if act_num == 4:
-		var naraku = load("res://src/entities/resources/boss/NarakuAbyss.tres")
-		boss.data["enemy_resource"] = naraku if naraku else bosses[0]
-	else:
-		boss.data["enemy_resource"] = bosses[randi() % bosses.size()]
-
-	current_map.nodes.append(boss)
+			if elite_idx < shuffled_elites.size():
+				node.data["enemy_resource"] = shuffled_elites[elite_idx]
+				elite_idx += 1
+			else:
+				node.data["enemy_resource"] = elite_enemies[randi() % elite_enemies.size()]
+		elif node.type == MapNode.Type.BOSS:
+			if act_num == 4:
+				var naraku = load("res://src/entities/resources/boss/NarakuAbyss.tres")
+				node.data["enemy_resource"] = naraku if naraku else bosses[0]
+			else:
+				node.data["enemy_resource"] = bosses[randi() % bosses.size()]
 
 func get_card_pool() -> Array[CardResource]:
 	var all_cards_path = "res://src/cards/resources/"
