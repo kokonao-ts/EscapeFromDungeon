@@ -9,6 +9,7 @@ card_name = "Reaper"
 cost = 2
 type = 0
 character_class = 0
+categories = 10
 target = 2
 icon = "card_placeholder.png"
 description = "Deal 4 damage to ALL enemies. Heal HP equal to unblocked damage. Exhaust."

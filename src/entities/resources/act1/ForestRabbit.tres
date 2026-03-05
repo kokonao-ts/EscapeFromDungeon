@@ -32,6 +32,8 @@ cost = 1
 description = "Curl Up"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "forest_rabbit"
 enemy_name = "Forest Rabbit"

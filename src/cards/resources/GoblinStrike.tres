@@ -6,7 +6,8 @@
 script = ExtResource("1_script")
 card_id = "goblin_strike"
 card_name = "哥布林打擊"
-character_class = 6
+character_class = 0
+categories = 1
 rarity = 3
 cost = 1
 type = 0

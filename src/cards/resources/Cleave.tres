@@ -9,6 +9,7 @@ card_name = "Cleave"
 cost = 1
 type = 0
 character_class = 0
+categories = 10
 target = 2
 icon = "card_placeholder.png"
 description = "Deal 8 damage to ALL enemies."

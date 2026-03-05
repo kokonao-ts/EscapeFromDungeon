@@ -20,6 +20,8 @@ cost = 2
 description = "Ice Flower Flash"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "ice_sword_thief"
 enemy_name = "冰劍大盜"

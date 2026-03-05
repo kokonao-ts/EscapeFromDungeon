@@ -26,6 +26,8 @@ description = "Dark Strike"
 icon = ""
 
 [resource]
+character_class = 0
+supported_categories = 17
 script = ExtResource("2_b")
 enemy_id = "cultist"
 enemy_name = "Cultist"

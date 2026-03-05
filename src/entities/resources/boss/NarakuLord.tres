@@ -48,6 +48,8 @@ cost = 1
 description = "Demon King Eye"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "naraku_lord"
 enemy_name = "奈落之主"

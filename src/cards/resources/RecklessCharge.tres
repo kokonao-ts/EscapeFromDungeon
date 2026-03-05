@@ -9,6 +9,7 @@ card_name = "Reckless Charge"
 cost = 0
 type = 0
 character_class = 0
+categories = 10
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 7 damage. Shuffle a Dazed into your draw pile."

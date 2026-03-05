@@ -9,6 +9,7 @@ card_name = "Demon Form"
 cost = 3
 type = 2
 character_class = 0
+categories = 42
 rarity = 2
 target = 1
 icon = "card_placeholder.png"

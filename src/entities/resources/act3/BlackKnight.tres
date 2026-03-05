@@ -25,6 +25,8 @@ cost = 1
 description = "Armor Break"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "black_knight"
 enemy_name = "黑騎士"

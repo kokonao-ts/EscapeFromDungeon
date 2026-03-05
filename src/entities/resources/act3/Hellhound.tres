@@ -27,6 +27,8 @@ cost = 1
 description = "Fire Claw"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "hellhound"
 enemy_name = "地獄犬"

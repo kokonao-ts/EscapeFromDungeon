@@ -27,6 +27,8 @@ cost = 1
 description = "Melt"
 
 [resource]
+character_class = 0
+supported_categories = 5
 script = ExtResource("2_b")
 enemy_id = "fire_elemental_larva"
 enemy_name = "Fire Elemental Larva"

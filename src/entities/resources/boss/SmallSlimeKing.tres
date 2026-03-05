@@ -19,6 +19,8 @@ cost = 2
 description = "Small Jump"
 
 [resource]
+character_class = 0
+supported_categories = 5
 script = ExtResource("2_b")
 enemy_id = "small_slime_king"
 enemy_name = "Small Slime King"

@@ -6,13 +6,14 @@ class Body:
 	var max_hp: int
 	var hp: int
 	var character_class: CardResource.CharacterClass = CardResource.CharacterClass.NEUTRAL
+	var supported_categories: int = 1 # GENERAL
 	var deck: Array[CardResource] = []
 	var enemy_resource: EnemyResource
 
 var player_stats: Stats
 var deck: Array[CardResource] = []
 var gold: int = 0
-var character_class: CardResource.CharacterClass = CardResource.CharacterClass.IRONCLAD
+var character_class: CardResource.CharacterClass = CardResource.CharacterClass.NEUTRAL
 
 var bodies: Array[Body] = []
 var current_body_index: int = 0
@@ -23,7 +24,7 @@ var current_node_index: int = -1 # -1 means just started act
 var current_map: MapAct = null
 var is_run_active: bool = false
 
-func initialize_run(p_class: CardResource.CharacterClass = CardResource.CharacterClass.IRONCLAD):
+func initialize_run(p_class: CardResource.CharacterClass = CardResource.CharacterClass.NEUTRAL):
 	is_run_active = true
 	character_class = p_class
 	player_stats = Stats.new()
@@ -38,59 +39,6 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 	var goblin_rally_res = "res://src/cards/resources/GoblinRally.tres"
 
 	match character_class:
-		CardResource.CharacterClass.IRONCLAD:
-			player_stats.max_hp = 80
-			var strike = load(strike_res)
-			var defend = load(defend_res)
-			var bash = load("res://src/cards/resources/Bash.tres")
-			var start_deck: Array[CardResource] = [
-				strike, strike, strike, strike, strike,
-				defend, defend, defend, defend, bash
-			]
-
-			var core_body = Body.new()
-			core_body.name = "鐵衛士"
-			core_body.character_class = CardResource.CharacterClass.IRONCLAD
-			core_body.max_hp = 80
-			core_body.hp = 80
-			core_body.deck.assign(start_deck)
-			bodies.append(core_body)
-		CardResource.CharacterClass.SILENT:
-			player_stats.max_hp = 70
-			var strike = load("res://src/cards/resources/SilentStrike.tres")
-			var defend = load("res://src/cards/resources/SilentDefend.tres")
-			var special = load("res://src/cards/resources/SilentSpecial.tres")
-			var survivor = load("res://src/cards/resources/SilentSurvivor.tres")
-			var start_deck: Array[CardResource] = [
-				strike, strike, strike, strike, strike,
-				defend, defend, defend, defend, defend, special, survivor
-			]
-
-			var core_body = Body.new()
-			core_body.name = "寂靜者"
-			core_body.character_class = CardResource.CharacterClass.SILENT
-			core_body.max_hp = 70
-			core_body.hp = 70
-			core_body.deck.assign(start_deck)
-			bodies.append(core_body)
-		CardResource.CharacterClass.WATCHER:
-			player_stats.max_hp = 72
-			var strike = load("res://src/cards/resources/WatcherStrike.tres")
-			var defend = load("res://src/cards/resources/WatcherDefend.tres")
-			var special = load("res://src/cards/resources/WatcherSpecial.tres")
-			var vigilance = load("res://src/cards/resources/WatcherVigilance.tres")
-			var start_deck: Array[CardResource] = [
-				strike, strike, strike, strike,
-				defend, defend, defend, defend, special, vigilance
-			]
-
-			var core_body = Body.new()
-			core_body.name = "觀者"
-			core_body.character_class = CardResource.CharacterClass.WATCHER
-			core_body.max_hp = 72
-			core_body.hp = 72
-			core_body.deck.assign(start_deck)
-			bodies.append(core_body)
 		CardResource.CharacterClass.GOBLIN_ASSASSIN:
 			player_stats.max_hp = 50
 			var execute_knife = load("res://src/cards/resources/ExecuteKnife.tres").duplicate()
@@ -117,6 +65,7 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 			var core_body = Body.new()
 			core_body.name = "哥布林刺客"
 			core_body.character_class = CardResource.CharacterClass.GOBLIN_ASSASSIN
+			core_body.supported_categories = CardResource.Category.GENERAL | CardResource.Category.WEAPON | CardResource.Category.SWORD_SKILL | CardResource.Category.UNIQUE
 			core_body.max_hp = 50
 			core_body.hp = 50
 			core_body.deck.assign(body_deck)
@@ -149,6 +98,7 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 			var core_body = Body.new()
 			core_body.name = "哥布林法師"
 			core_body.character_class = CardResource.CharacterClass.GOBLIN_MAGE
+			core_body.supported_categories = CardResource.Category.GENERAL | CardResource.Category.MAGIC | CardResource.Category.UNIQUE
 			core_body.max_hp = 40
 			core_body.hp = 40
 			core_body.deck.assign(body_deck)
@@ -314,6 +264,7 @@ func possess_enemy(enemy_res: EnemyResource):
 	new_body.max_hp = enemy_res.max_hp
 	new_body.hp = enemy_res.max_hp
 	new_body.character_class = enemy_res.character_class
+	new_body.supported_categories = enemy_res.supported_categories
 	new_body.enemy_resource = enemy_res
 
 	# Generate a deck for the enemy
@@ -345,6 +296,14 @@ func possess_enemy(enemy_res: EnemyResource):
 	# Automatically switch to the new body
 	switch_body(bodies.size() - 1)
 
+func _is_card_allowed(card: CardResource, body: Body) -> bool:
+	# UNIQUE cards must match character class
+	if card.categories & CardResource.Category.UNIQUE:
+		return card.character_class == body.character_class
+
+	# Otherwise check category intersection
+	return (card.categories & body.supported_categories) != 0
+
 func _rebuild_deck():
 	if current_body_index < 0 or current_body_index >= bodies.size():
 		return
@@ -355,31 +314,12 @@ func _rebuild_deck():
 	deck.clear()
 
 	for card in fixed_cards:
-		# Always keep goblin special cards
-		if card.is_goblin_special:
-			deck.append(card)
-			continue
-
-		# Keep non-technique fixed cards
-		if not card.is_technique:
-			deck.append(card)
-			continue
-
-		# Filter techniques by body class
-		var is_goblin_body = body.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN or \
-							body.character_class == CardResource.CharacterClass.GOBLIN_MAGE
-
-		var is_neutral = card.character_class == CardResource.CharacterClass.NEUTRAL
-		var is_matching = card.character_class == body.character_class
-		var is_goblin_shared = card.character_class == CardResource.CharacterClass.GOBLIN_SHARED
-
-		if is_matching or is_neutral:
-			deck.append(card)
-		elif is_goblin_body and is_goblin_shared:
+		if _is_card_allowed(card, body):
 			deck.append(card)
 
-	for c in body.deck:
-		deck.append(c)
+	for card in body.deck:
+		if _is_card_allowed(card, body):
+			deck.append(card)
 
 func switch_body(index: int):
 	if index < 0 or index >= bodies.size():

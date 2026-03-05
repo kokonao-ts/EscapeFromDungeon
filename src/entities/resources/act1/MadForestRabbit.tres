@@ -27,6 +27,8 @@ cost = 1
 description = "Escape Stance"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "mad_forest_rabbit"
 enemy_name = "狂暴森林兔"

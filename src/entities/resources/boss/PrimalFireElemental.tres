@@ -33,6 +33,8 @@ cost = 1
 description = "Temperature Rise"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "primal_fire_elemental"
 enemy_name = "原初火元素"

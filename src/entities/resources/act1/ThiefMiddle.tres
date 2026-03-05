@@ -26,6 +26,8 @@ cost = 0
 description = "Thief Evasion"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "thief_middle"
 enemy_name = "盜賊二哥"

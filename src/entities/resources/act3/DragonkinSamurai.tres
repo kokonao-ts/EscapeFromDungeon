@@ -25,6 +25,8 @@ cost = 1
 description = "Martial Art: Break"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "dragonkin_samurai"
 enemy_name = "半龍人武士"

@@ -25,6 +25,8 @@ cost = 1
 description = "Soul Flame Shield"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "black_flame_wisp"
 enemy_name = "黑炎鬼火"

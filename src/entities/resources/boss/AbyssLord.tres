@@ -42,6 +42,8 @@ cost = 2
 description = "Soul Bite"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "abyss_lord"
 enemy_name = "地獄深淵魔君"

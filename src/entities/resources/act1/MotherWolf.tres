@@ -27,6 +27,8 @@ cost = 2
 description = "Summon Pup"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "mother_wolf"
 enemy_name = "母狼"

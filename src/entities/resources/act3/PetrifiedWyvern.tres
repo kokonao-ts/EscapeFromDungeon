@@ -25,6 +25,8 @@ cost = 1
 description = "Rock Armor"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "petrified_wyvern"
 enemy_name = "石化飛龍"

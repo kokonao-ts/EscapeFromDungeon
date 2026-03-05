@@ -9,6 +9,7 @@ card_name = "Rupture"
 cost = 1
 type = 2
 character_class = 0
+categories = 42
 target = 1
 icon = "card_placeholder.png"
 description = "Whenever you lose HP from a card, gain 1 Strength."

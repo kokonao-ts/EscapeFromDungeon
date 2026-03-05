@@ -9,6 +9,7 @@ card_name = "Armaments"
 cost = 1
 type = 1
 character_class = 0
+categories = 10
 target = 1
 icon = "card_placeholder.png"
 description = "Gain 5 Block. Upgrade a card in your hand for the rest of combat."

@@ -21,6 +21,8 @@ cost = 1
 description = "Elemental Cycle"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "elemental_sorcerer"
 enemy_name = "元素術士"

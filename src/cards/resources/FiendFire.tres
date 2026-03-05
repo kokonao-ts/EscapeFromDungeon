@@ -9,6 +9,7 @@ card_name = "Fiend Fire"
 cost = 2
 type = 0
 character_class = 0
+categories = 10
 target = 0
 icon = "card_placeholder.png"
 description = "Exhaust your hand. Deal 7 damage for each Exhausted card. Exhaust."

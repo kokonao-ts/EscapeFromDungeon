@@ -33,6 +33,8 @@ cost = 2
 description = "Ambush"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "bounty_trapper"
 enemy_name = "捕獸者"

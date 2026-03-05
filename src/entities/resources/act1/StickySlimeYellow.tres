@@ -25,6 +25,8 @@ cost = 1
 description = "Coagulate"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "sticky_slime_yellow"
 enemy_name = "黏稠史萊姆（黃）"

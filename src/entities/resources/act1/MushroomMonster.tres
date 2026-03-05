@@ -25,6 +25,8 @@ cost = 1
 description = "Expand"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "mushroom_monster"
 enemy_name = "蘑菇妖"

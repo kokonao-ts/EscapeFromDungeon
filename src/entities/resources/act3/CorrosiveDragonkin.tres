@@ -26,6 +26,8 @@ cost = 1
 description = "Corrosive Armor"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "corrosive_dragon_kin"
 enemy_name = "Corrosive Dragonkin"

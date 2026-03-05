@@ -9,6 +9,7 @@ card_name = "Heavy Blade"
 cost = 2
 type = 0
 character_class = 0
+categories = 10
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 14 damage. Strength affects Heavy Blade 3 times."

@@ -9,6 +9,7 @@ card_name = "Twin Strike"
 cost = 1
 type = 0
 character_class = 0
+categories = 10
 target = 0
 icon = "card_placeholder.png"
 description = "Deal 5 damage twice."

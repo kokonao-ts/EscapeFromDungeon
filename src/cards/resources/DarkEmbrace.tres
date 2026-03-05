@@ -9,6 +9,7 @@ card_name = "Dark Embrace"
 cost = 2
 type = 2
 character_class = 0
+categories = 10
 target = 1
 icon = "card_placeholder.png"
 description = "Whenever a card is Exhausted, draw 1 card."

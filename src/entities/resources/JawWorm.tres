@@ -37,6 +37,8 @@ description = "Thrash"
 icon = ""
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "jaw_worm"
 enemy_name = "Jaw Worm"

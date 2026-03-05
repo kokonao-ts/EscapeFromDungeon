@@ -18,6 +18,8 @@ cost = 1
 description = "Shadow Hide"
 
 [resource]
+character_class = 0
+supported_categories = 9
 script = ExtResource("2_b")
 enemy_id = "chaos_assassin"
 enemy_name = "刺客"
