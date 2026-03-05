@@ -33,6 +33,7 @@ func transition_to(new_state: State):
 			execute_enemy_turns()
 		State.WIN:
 			print("Combat Won!")
+			_award_gold()
 			combat_finished.emit(true)
 		State.LOSE:
 			print("Combat Lost!")
@@ -242,3 +243,20 @@ func _process_poison(entity):
 		entity.stats.lose_hp(entity.stats.poison)
 		entity.stats.poison = max(0, entity.stats.poison - 1)
 		entity.update_ui()
+
+func _award_gold():
+	var map = RunManager.get_map()
+	if RunManager.current_node_index < 0 or RunManager.current_node_index >= map.nodes.size():
+		return
+
+	var node = map.nodes[RunManager.current_node_index]
+	var amount = 0
+	if node.type == MapNode.Type.COMBAT:
+		amount = randi_range(10, 20)
+	elif node.type == MapNode.Type.ELITE:
+		amount = randi_range(30, 50)
+	elif node.type == MapNode.Type.BOSS:
+		amount = randi_range(80, 120)
+
+	RunManager.gold += amount
+	print("Awarded %d Gold!" % amount)

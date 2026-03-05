@@ -37,6 +37,9 @@ enum Rarity { COMMON, UNCOMMON, RARE, STARTER }
 @export var strength: int = 0
 @export var burn: int = 0
 @export var chill: int = 0
+@export var poison: int = 0
+@export var evasion: int = 0
+@export var thorns: int = 0
 
 @export_group("Special")
 @export var exhaust: bool = false
@@ -83,7 +86,19 @@ func apply_effects(user: Entity, targets: Array[Entity], combat_manager):
 		if chill > 0:
 			combat_manager.apply_chill(t, chill)
 
+		if poison > 0:
+			t.stats.poison += poison
+			t.update_ui()
+
 	# Apply effects to user
+	if evasion > 0:
+		user.stats.evasion += evasion
+		user.update_ui()
+
+	if thorns > 0:
+		user.stats.thorns += thorns
+		user.update_ui()
+
 	if block > 0:
 		user.add_block(block)
 

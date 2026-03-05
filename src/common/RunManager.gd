@@ -60,9 +60,10 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 			var strike = load("res://src/cards/resources/SilentStrike.tres")
 			var defend = load("res://src/cards/resources/SilentDefend.tres")
 			var special = load("res://src/cards/resources/SilentSpecial.tres")
+			var survivor = load("res://src/cards/resources/SilentSurvivor.tres")
 			var start_deck: Array[CardResource] = [
 				strike, strike, strike, strike, strike,
-				defend, defend, defend, defend, defend, special
+				defend, defend, defend, defend, defend, special, survivor
 			]
 
 			var core_body = Body.new()
@@ -77,9 +78,10 @@ func initialize_run(p_class: CardResource.CharacterClass = CardResource.Characte
 			var strike = load("res://src/cards/resources/WatcherStrike.tres")
 			var defend = load("res://src/cards/resources/WatcherDefend.tres")
 			var special = load("res://src/cards/resources/WatcherSpecial.tres")
+			var vigilance = load("res://src/cards/resources/WatcherVigilance.tres")
 			var start_deck: Array[CardResource] = [
 				strike, strike, strike, strike,
-				defend, defend, defend, defend, special
+				defend, defend, defend, defend, special, vigilance
 			]
 
 			var core_body = Body.new()
@@ -177,6 +179,7 @@ func generate_act(act_num: int):
 	var boss_path = "res://src/entities/resources/boss/"
 
 	var normal_enemies = []
+	var elite_enemies = []
 	var bosses = []
 
 	# Try to load from new structure, fallback to old if not found
@@ -208,20 +211,48 @@ func generate_act(act_num: int):
 	if bosses.is_empty():
 		bosses = [normal_enemies[0]]
 
-	# Basic linear act for now: 5 combats and a boss
+	# Diversified sequence: Combat, Combat, Elite, Combat, Rest Site (with randomization)
+	var node_types = [
+		MapNode.Type.COMBAT,
+		MapNode.Type.COMBAT,
+		MapNode.Type.ELITE,
+		MapNode.Type.COMBAT,
+		MapNode.Type.REST
+	]
+
+	# Keep the first combat fixed, and the last rest site fixed
+	# Shuffle the middle three nodes (indices 1, 2, 3)
+	var middle = [node_types[1], node_types[2], node_types[3]]
+	middle.shuffle()
+	node_types[1] = middle[0]
+	node_types[2] = middle[1]
+	node_types[3] = middle[2]
+
+	# Identify potential Elites from current pool (or hardcode for now)
+	# In a real project, we'd have an 'elite/' folder.
+	for enemy in normal_enemies:
+		if "Adventurer" in enemy.enemy_name or "Bounty" in enemy.enemy_name or "ThiefElder" in enemy.enemy_id:
+			elite_enemies.append(enemy)
+
+	if elite_enemies.is_empty():
+		elite_enemies = [normal_enemies[randi() % normal_enemies.size()]]
+
 	for i in range(5):
 		var node = MapNode.new()
-		node.type = MapNode.Type.COMBAT
+		node.type = node_types[i]
 		node.position = Vector2(0, i * 100)
 
-		# For Act 3, maybe have multiple enemies?
-		if act_num == 3 and randf() > 0.5:
-			var ens = []
-			ens.append(normal_enemies[randi() % normal_enemies.size()])
-			ens.append(normal_enemies[randi() % normal_enemies.size()])
-			node.data["enemies"] = ens
-		else:
-			node.data["enemy_resource"] = normal_enemies[randi() % normal_enemies.size()]
+		if node.type == MapNode.Type.COMBAT:
+			# For Act 3, maybe have multiple enemies?
+			if act_num == 3 and randf() > 0.5:
+				var ens = []
+				ens.append(normal_enemies[randi() % normal_enemies.size()])
+				ens.append(normal_enemies[randi() % normal_enemies.size()])
+				node.data["enemies"] = ens
+			else:
+				node.data["enemy_resource"] = normal_enemies[randi() % normal_enemies.size()]
+		elif node.type == MapNode.Type.ELITE:
+			node.data["enemy_resource"] = elite_enemies[randi() % elite_enemies.size()]
 
 		current_map.nodes.append(node)
 
