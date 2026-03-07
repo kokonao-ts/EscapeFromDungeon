@@ -9,6 +9,7 @@ class Body:
 	var supported_categories: int = 1 # GENERAL
 	var deck: Array[CardResource] = []
 	var enemy_resource: EnemyResource
+	var sync_level: int = 0 # 0: Common, 1: Uncommon, 2: Rare
 
 var player_stats: Stats
 var deck: Array[CardResource] = []
@@ -344,6 +345,16 @@ func possess_enemy(enemy_res: EnemyResource):
 		card.hits = action.hits
 		card.character_class = character_class
 		card.icon = "card_placeholder.png"
+
+		# Assign rarity based on "power"
+		var power_score = action.damage * action.hits + action.block * 2 + action.strength * 5
+		if action.stun > 0 or action.attack_lock > 0 or power_score > 20:
+			card.rarity = CardResource.Rarity.RARE
+		elif action.vulnerable > 0 or action.weak > 0 or action.poison > 0 or action.burn > 0 or power_score > 10:
+			card.rarity = CardResource.Rarity.UNCOMMON
+		else:
+			card.rarity = CardResource.Rarity.COMMON
+
 		enemy_deck.append(card)
 
 	# If no actions, give some default strikes
@@ -354,12 +365,27 @@ func possess_enemy(enemy_res: EnemyResource):
 		enemy_deck = [strike, strike, strike]
 
 	new_body.deck = enemy_deck
-	bodies.append(new_body)
 
-	# Automatically switch to the new body
-	switch_body(bodies.size() - 1)
+	if character_class == CardResource.CharacterClass.GOBLIN_MAGE:
+		# Mage can only have one body besides core
+		if bodies.size() > 1:
+			bodies[1] = new_body
+		else:
+			bodies.append(new_body)
+		switch_body(1)
+	else:
+		# Assassin adds to collection
+		bodies.append(new_body)
+		switch_body(bodies.size() - 1)
 
 func _is_card_allowed(card: CardResource, body: Body) -> bool:
+	# Check sync level for non-starter, non-special cards
+	if not card.is_goblin_special and card.rarity != CardResource.Rarity.STARTER:
+		if card.rarity == CardResource.Rarity.UNCOMMON and body.sync_level < 1:
+			return false
+		if card.rarity == CardResource.Rarity.RARE and body.sync_level < 2:
+			return false
+
 	# UNIQUE cards must match character class
 	if card.categories & CardResource.Category.UNIQUE:
 		return card.character_class == body.character_class
