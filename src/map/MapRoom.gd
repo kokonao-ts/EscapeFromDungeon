@@ -10,6 +10,17 @@ func _ready():
 	display_act()
 	$MenuButton.pressed.connect(_on_menu_pressed)
 
+	if RunManager.character_class == CardResource.CharacterClass.GOBLIN_ASSASSIN:
+		var switch_btn = Button.new()
+		switch_btn.text = "更換身體"
+		switch_btn.position = Vector2(20, 100)
+		switch_btn.pressed.connect(_on_switch_body_pressed)
+		add_child(switch_btn)
+
+func _on_switch_body_pressed():
+	var switch_ui = load("res://src/ui/BodySwitchUI.tscn").instantiate()
+	add_child(switch_ui)
+
 func display_act():
 	if not act_label or not node_container:
 		return
@@ -104,11 +115,9 @@ func _on_node_selected(index: int):
 	elif node.type == MapNode.Type.BOSS:
 		get_tree().change_scene_to_file("res://src/combat/CombatRoom.tscn")
 	elif node.type == MapNode.Type.REST:
-		var body = RunManager.bodies[RunManager.current_body_index]
-		var heal_amount = floor(body.max_hp * 0.3)
-		RunManager.player_stats.hp = min(RunManager.player_stats.max_hp, RunManager.player_stats.hp + heal_amount)
-		body.hp = RunManager.player_stats.hp
-		display_act()
+		var rest_ui = load("res://src/ui/RestChoiceUI.tscn").instantiate()
+		add_child(rest_ui)
+		rest_ui.choice_made.connect(display_act)
 	else:
 		# Events not implemented yet, just skip
 		display_act()
